@@ -8,20 +8,21 @@ public class Schedule {
     private String activityId;
     private String startTime;
     private String endTime;
+    private String classRoom;
     private String activityName;
     private String group;
     private String teacher;
-    private String note;
+
 
     Schedule(String id, String start, String end, String name, String group,
-                String teacher, String note) {
+                String teacher, String classRoom) {
         this.activityId = id;
         this.startTime = start;
         this.endTime = end;
         this.activityName = name;
         this.group = group;
         this.teacher = teacher;
-        this.note = note;
+        this.classRoom = classRoom;
     }
 
     public String getActivityId() {
@@ -48,7 +49,7 @@ public class Schedule {
         return teacher;
     }
 
-    public String getNote() {
-        return note;
+    public String getClassRoom() {
+        return classRoom;
     }
 }
