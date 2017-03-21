@@ -2,9 +2,10 @@ package be.ecam.ecalendar;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
-import com.android.volley.Request;
-import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.StringRequest;
 
@@ -16,6 +17,8 @@ import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.component.VEvent;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -28,6 +31,10 @@ import java.util.concurrent.ExecutionException;
  */
 
 public class CalendarLoader extends IntentService {
+    static final String TAG = CalendarLoader.class.getSimpleName();
+
+    public static final String BROADCAST_ACTION = "calendar_loading";
+
     static final String BASE_URL = "calendar.ecam.be/list";
     static final String ICS_URL = "calendar.ecam.be/ics/";
     static final String TEACHERS_URL = BASE_URL + "/p";
@@ -46,33 +53,55 @@ public class CalendarLoader extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
+        Intent returnIntent = new Intent(BROADCAST_ACTION);
         switch(intent.getStringExtra("action")) {
             case "schedule":
                 String name = intent.getStringExtra("name");
                 ArrayList<Schedule> schedules = getSchedules(name);
+
+                returnIntent.putExtra("action", "schedule");
+                returnIntent.putExtra("schedules", schedules);
                 break;
 
-            case "calendar_type":
-                ArrayList<CalendarType> teachers = getCalendarType(TEACHERS_URL);
-                ArrayList<CalendarType> classrooms = getCalendarType(CLASSROOMS_URL);
-                ArrayList<CalendarType> groups = getCalendarType(GROUPS_URL);
-                ArrayList<CalendarType> students = getCalendarType(STUDENTS_URL);
+            case "type":
+                ArrayList<CalendarType> teachers = getCalendarType(TEACHERS_URL, "trigens", "npens");
+                ArrayList<CalendarType> classrooms = getCalendarType(CLASSROOMS_URL, "abraud", "nomaud");
+                ArrayList<CalendarType> groups = getCalendarType(GROUPS_URL, "abrser", "demisérie");
+                // Could be handled when we have a proper API...
+                // ArrayList<CalendarType> students = getCalendarType(STUDENTS_URL);
+
+                returnIntent.putExtra("action", "type");
+                returnIntent.putExtra("teachers", teachers);
+                returnIntent.putExtra("classrooms", classrooms);
+                returnIntent.putExtra("groups", groups);
                 break;
+
+            default:
+                Log.d(TAG, "Could not match this action.");
         }
+        LocalBroadcastManager.getInstance(this).sendBroadcast(returnIntent);
     }
 
-    private ArrayList<CalendarType> getCalendarType(String url) {
+    private ArrayList<CalendarType> getCalendarType(String url, String idKey, String descriptionKey) {
         // Synchronous request.
-        RequestFuture<JSONObject> future = RequestFuture.newFuture();
-        JsonObjectRequest request = new JsonObjectRequest(url, new JSONObject(), future, future);
+        RequestFuture<JSONArray> future = RequestFuture.newFuture();
+        JsonArrayRequest request = new JsonArrayRequest(url, future, future);
 
+        ArrayList<CalendarType> types = new ArrayList<>();
         try {
-            JSONObject response = future.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+            JSONArray response = future.get();
+            for (int i = 0; i < response.length(); i++) {
+                JSONObject data = (JSONObject) response.get(i);
+                types.add(new CalendarType(
+                        data.getString(idKey),
+                        data.getString(descriptionKey)
+                ));
+            }
+        } catch (InterruptedException | ExecutionException | JSONException e) {
             e.printStackTrace();
         }
+
+        return types;
     }
 
     private ArrayList<Schedule> getSchedules(String name) {
@@ -98,13 +127,7 @@ public class CalendarLoader extends IntentService {
                 VEvent event = (VEvent) component;
                 schedules.add(convertVEventToSchedule((event)));
             }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (ParserException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (InterruptedException | ExecutionException | ParserException | IOException e) {
             e.printStackTrace();
         }
 
@@ -113,17 +136,17 @@ public class CalendarLoader extends IntentService {
 
     private Schedule convertVEventToSchedule(VEvent event) {
         String id = event.getSummary().getValue();
+        String classRoom = event.getLocation().getValue();
 
         Date startDate = new Date();
         Date endDate = new Date();
         event.getConsumedTime(startDate, endDate);
 
-        //String descriptionData = event.getDescription().getValue();
         ParameterList parameters = event.getDescription().getParameters();
         String teacher = parameters.getParameter("Ens").getValue();
         String name = parameters.getParameter("Act").getValue();
         String group = parameters.getParameter("Groupe").getValue();
 
-        return new Schedule(id, startDate, endDate, name, group, teacher);
+        return new Schedule(id, startDate, endDate, name, group, teacher, classRoom);
     }
 }
