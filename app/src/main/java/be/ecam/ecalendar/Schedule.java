@@ -1,21 +1,22 @@
 package be.ecam.ecalendar;
 
+import java.util.Date;
+
 /**
  * Created by Antoi on 21/03/2017.
  */
 
 public class Schedule {
     private String activityId;
-    private String startTime;
-    private String endTime;
-    private String classRoom;
+    private Date startTime;
+    private Date endTime;
     private String activityName;
     private String group;
     private String teacher;
+    private String classRoom;
 
-
-    Schedule(String id, String start, String end, String name, String group,
-                String teacher, String classRoom) {
+    Schedule(String id, Date start, Date end, String name, String group,
+             String teacher, String note) {
         this.activityId = id;
         this.startTime = start;
         this.endTime = end;
@@ -29,11 +30,11 @@ public class Schedule {
         return activityId;
     }
 
-    public String getStartTime() {
+    public Date getStartTime() {
         return startTime;
     }
 
-    public String getEndTime() {
+    public Date getEndTime() {
         return endTime;
     }
 
