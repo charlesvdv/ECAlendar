@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">ECAlendar</string>
+    <string name="main_label">ECAlendar</string>
+    <string name="detail_label">Intitulé du cours</string>
 </resources>
