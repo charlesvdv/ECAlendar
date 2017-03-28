@@ -33,5 +33,10 @@
         <service
             android:name=".CalendarLoader"
             android:exported="false" />
+        <receiver android:name=".CalendarDAO">
+            <intent-filter>
+                <action android:name="calendar_loaded"></action>
+            </intent-filter>
+        </receiver>
     </application>
 </manifest>

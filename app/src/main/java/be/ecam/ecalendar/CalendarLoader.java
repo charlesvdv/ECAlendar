@@ -33,7 +33,7 @@ import java.util.concurrent.ExecutionException;
 public class CalendarLoader extends IntentService {
     static final String TAG = CalendarLoader.class.getSimpleName();
 
-    public static final String BROADCAST_ACTION = "calendar_loading";
+    public static final String BROADCAST_ACTION = "calendar_loaded";
 
     static final String BASE_URL = "calendar.ecam.be/list";
     static final String ICS_URL = "calendar.ecam.be/ics/";
@@ -61,6 +61,7 @@ public class CalendarLoader extends IntentService {
 
                 returnIntent.putExtra("action", "schedule");
                 returnIntent.putExtra("schedules", schedules);
+                returnIntent.putExtra("name", name);
                 break;
 
             case "type":
