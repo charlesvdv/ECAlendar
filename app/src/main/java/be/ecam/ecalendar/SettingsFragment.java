@@ -2,6 +2,8 @@ package be.ecam.ecalendar;
 
 import android.os.Bundle;
 import android.support.v7.preference.PreferenceFragmentCompat;
+
+
 /**
  * Created by Antoi on 21/03/2017.
  */

@@ -23,7 +23,7 @@ public class Schedule {
         this.activityName = name;
         this.group = group;
         this.teacher = teacher;
-        this.classRoom = classRoom;
+        this.classRoom = note;
     }
 
     public String getActivityId() {

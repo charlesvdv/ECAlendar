@@ -1,8 +1,9 @@
 <resources>
     <string name="app_name">ECAlendar</string>
-
+    <string name="change_settings">Settings</string>
+    <string name="cal_type">Section</string>
     <string name="main_label">ECAlendar</string>
-    <string name="detail_label">Intitulé du cours</string>
+    <string name="detail_label">Intitule du cours</string>
 
     <string name="title_activity_settings">Settings</string>
 
