@@ -4,10 +4,12 @@
     <array name="schedule_labels">
         <item>3BE</item>
         <item>4EI</item>
+        <item>4EO</item>
     </array>
 
     <array name="schedule_values">
         <item>3BE</item>
         <item>4EI</item>
+        <item>4EO</item>
     </array>
 </resources>
