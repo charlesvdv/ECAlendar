@@ -23,10 +23,10 @@ public class CalendarDBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         final String SQL_CREATE_SCHEDULE_TABLE =
                 "CREATE TABLE " + ScheduleEntry.TABLE_NAME + " (" +
-                        ScheduleEntry.SCHEDULE_ACTIVITY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                        ScheduleEntry.SCHEDULE_ACTIVITY_ID + " TEXT PRIMARY KEY," +
                         ScheduleEntry.SCHEDULE_ACTIVITY_NAME + " TEXT NOT NULL," +
-                        ScheduleEntry.SCHEDULE_START_TIME + " TEXT NOT NULL," +
-                        ScheduleEntry.SCHEDULE_END_TIME + " TEXT NOT NULL," +
+                        ScheduleEntry.SCHEDULE_START_TIME + " INTEGER NOT NULL," +
+                        ScheduleEntry.SCHEDULE_END_TIME + " INTEGER NOT NULL," +
                         ScheduleEntry.SCHEDULE_GROUP + " TEXT NOT NULL" +
                         ScheduleEntry.SCHEDULE_TEACHER + " TEXT NOT NULL" +
                         ScheduleEntry.SCHEDULE_CLASS_ROOM + " TEXT NOT NULL" +
@@ -35,11 +35,11 @@ public class CalendarDBHelper extends SQLiteOpenHelper {
 
         final String SQL_CREATE_CALENDAR_TYPE_TABLE =
                 "CREATE TABLE " + CalendarTypeEntry.TABLE_NAME + " (" +
-                        CalendarTypeEntry.CALENDAR_TYPE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                        CalendarTypeEntry.CALENDAR_TYPE_ID + " TEXT PRIMARY KEY," +
                         CalendarTypeEntry.CALENDAR_TYPE_DESCRIPTION + " TEXT NOT NULL," +
+                        CalendarTypeEntry.CALENDAR_TYPE_TYPE + " TEXT NOT NULL," +
                         "); ";
         db.execSQL(SQL_CREATE_CALENDAR_TYPE_TABLE);
-
     }
 
     @Override

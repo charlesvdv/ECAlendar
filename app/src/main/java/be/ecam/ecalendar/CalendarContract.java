@@ -22,8 +22,8 @@ import android.provider.BaseColumns;
         public static final String TABLE_NAME = "calendar_type";
         public static final String CALENDAR_TYPE_ID = "id";
         public static final String CALENDAR_TYPE_DESCRIPTION = "description";
+        public static final String CALENDAR_TYPE_TYPE = "type";
     }
-
 }
 
 
