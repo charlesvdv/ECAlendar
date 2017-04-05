@@ -89,10 +89,15 @@ public class CalendarDAO {
         long lastSaved = lastTimePref.getLong(LAST_SAVED_CALENDAR_ID + name, 0);
         long current = new Date().getTime();
 
-        if (calendars.get(name).isEmpty() || current - lastSaved > TIME_BEFORE_RELOAD) {
-            downloadCalendar(name);
-        } else {
-            loadCalendarFromDB(name);
+        if (calendars.get(name) == null) {
+            calendars.put(name, new ArrayList<Schedule>());
+        }
+        if (calendars.get(name).isEmpty()) {
+            if (current - lastSaved > TIME_BEFORE_RELOAD) {
+                downloadCalendar(name);
+            } else {
+                loadCalendarFromDB(name);
+            }
         }
         return calendars.get(name);
     }
@@ -109,10 +114,14 @@ public class CalendarDAO {
         }
         // Get everythings from CalendarType table.
         Cursor cursor = db.query(CalendarTypeEntry.TABLE_NAME, null, null, null, null, null, null);
-        while (cursor.isAfterLast()) {
+        while (cursor.moveToNext()) {
             String type = cursor.getString(cursor.getColumnIndex(CalendarTypeEntry.CALENDAR_TYPE_TYPE));
             String id = cursor.getString(cursor.getColumnIndex(CalendarTypeEntry.CALENDAR_TYPE_ID));
             String desc = cursor.getString(cursor.getColumnIndex(CalendarTypeEntry.CALENDAR_TYPE_DESCRIPTION));
+
+            if (types.get(type) == null) {
+                types.put(type, new ArrayList<CalendarType>());
+            }
             types.get(type).add(new CalendarType(id, desc));
 
             cursor.moveToNext();
@@ -130,9 +139,10 @@ public class CalendarDAO {
         calendars.get(name).clear();
 
         Cursor cursor = db.query(ScheduleEntry.TABLE_NAME, null,
-                ScheduleEntry.SCHEDULE_ACTIVITY_ID + "=", new String[] {name}, null, null, null);
-        while (cursor.isAfterLast()) {
+                ScheduleEntry.SCHEDULE_CALENDAR + "=?", new String[] {name}, null, null, null);
+        while (cursor.moveToNext()) {
             calendars.get(name).add(new Schedule(
+                    cursor.getString(cursor.getColumnIndex(ScheduleEntry.SCHEDULE_CALENDAR)),
                     name,
                     new Date(cursor.getLong(cursor.getColumnIndex(ScheduleEntry.SCHEDULE_START_TIME))),
                     new Date(cursor.getLong(cursor.getColumnIndex(ScheduleEntry.SCHEDULE_END_TIME))),
@@ -141,8 +151,6 @@ public class CalendarDAO {
                     cursor.getString(cursor.getColumnIndex(ScheduleEntry.SCHEDULE_TEACHER)),
                     cursor.getString(cursor.getColumnIndex(ScheduleEntry.SCHEDULE_CLASS_ROOM))
             ));
-
-            cursor.moveToNext();
         }
     }
 
@@ -152,14 +160,16 @@ public class CalendarDAO {
         editor.commit();
     }
 
-    private void saveCalendarType() {
+    public void updateCalendarType(HashMap<String, ArrayList<CalendarType>> types) {
+        // Update in-memory representation.
+        this.types = types;
         // Delete all data associated to calendar type.
         db.delete(CalendarTypeEntry.TABLE_NAME, null, null);
 
         for (Map.Entry<String, ArrayList<CalendarType>> entry : types.entrySet()) {
             String type = entry.getKey();
 
-            for (CalendarType typeData : entry.getValue()) {
+            for (CalendarType typeData : removeDuplicate(entry.getValue())) {
                 ContentValues values = new ContentValues();
                 values.put(CalendarTypeEntry.CALENDAR_TYPE_ID, typeData.getId());
                 values.put(CalendarTypeEntry.CALENDAR_TYPE_DESCRIPTION, typeData.getDescription());
@@ -173,14 +183,36 @@ public class CalendarDAO {
         lastSavedTimeTypes = new Date().getTime();
     }
 
-    private void saveCalendar(String name, ArrayList<Schedule> schedules) {
+    private ArrayList<CalendarType> removeDuplicate(ArrayList<CalendarType> types) {
+        ArrayList<CalendarType> newData = new ArrayList<>();
+        for (CalendarType type : types) {
+            boolean found = false;
+            for (CalendarType data : newData) {
+                if (type.getId().equals(data.getId())) {
+                    found = true;
+                }
+            }
+            if (! found) {
+                newData.add(type);
+            }
+        }
+
+        return newData;
+    }
+
+    public void updateCalendar(String name, ArrayList<Schedule> schedules) {
+        // Update in-memory data
+        calendars.put(name, schedules);
+        // Notify that data has changed
+        notifier.notifySchedulesChange(name, schedules);
         // Remove previously saved calendar data with the name.
         db.delete(ScheduleEntry.TABLE_NAME,
-                ScheduleEntry.SCHEDULE_ACTIVITY_ID + "=?", new String[] { name });
+                ScheduleEntry.SCHEDULE_CALENDAR + "=?", new String[] { name });
 
         for (Schedule sched : schedules) {
             ContentValues values = new ContentValues();
-            values.put(ScheduleEntry.SCHEDULE_ACTIVITY_ID, name);
+            values.put(ScheduleEntry.SCHEDULE_ACTIVITY_ID, sched.getActivityId());
+            values.put(ScheduleEntry.SCHEDULE_CALENDAR, name);
             values.put(ScheduleEntry.SCHEDULE_ACTIVITY_NAME, sched.getActivityName());
             values.put(ScheduleEntry.SCHEDULE_START_TIME, sched.getStartTime().getTime());
             values.put(ScheduleEntry.SCHEDULE_END_TIME, sched.getStartTime().getTime());
