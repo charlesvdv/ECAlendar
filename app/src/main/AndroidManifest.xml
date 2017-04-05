@@ -33,7 +33,10 @@
         <service
             android:name=".CalendarLoader"
             android:exported="false" />
-        <receiver android:name=".CalendarDAO">
+        <receiver
+            android:name=".CalendarLoaderReceiver"
+            android:enabled="true"
+            android:exported="true">
             <intent-filter>
                 <action android:name="calendar_loaded"></action>
             </intent-filter>
