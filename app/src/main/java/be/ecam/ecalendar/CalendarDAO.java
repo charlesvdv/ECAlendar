@@ -4,31 +4,34 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-
-import android.content.BroadcastReceiver;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-
-import be.ecam.ecalendar.CalendarContract.*;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import be.ecam.ecalendar.CalendarContract.CalendarTypeEntry;
+import be.ecam.ecalendar.CalendarContract.ScheduleEntry;
+
 /**
  * Created by charles on 3/28/17.
  */
 
-// TODO:charlesvdv should implement OnUpdateListener for types and calendar.
-public class CalendarDAO extends BroadcastReceiver {
+public class CalendarDAO {
+    private static final String TAG = CalendarDAO.class.getSimpleName();
     private static final String LAST_SAVED_PREF_FILE_KEY = "last_saved_query";
     private static final String LAST_SAVED_TYPES_ID = "types";
     private static final String LAST_SAVED_CALENDAR_ID = "calendar-";
-    private static final int TIME_BEFORE_RELOAD = 60 * 60 * 24 * 7;
+
+    // In milliseconds.
+    private static final int TIME_BEFORE_RELOAD = 1000 * 60 * 60 * 24 * 7;
+
+    private static CalendarDAO singleton;
 
     private Context context;
-    private SharedPreferences lastTimePref;
+    private CalendarDataUpdated notifier;
 
     private CalendarDBHelper dbHelper;
     private SQLiteDatabase db;
@@ -37,9 +40,11 @@ public class CalendarDAO extends BroadcastReceiver {
     private HashMap<String, ArrayList<CalendarType>> types;
 
     private long lastSavedTimeTypes;
+    private SharedPreferences lastTimePref;
 
-    public CalendarDAO(Context context) {
+    private CalendarDAO(Context context, CalendarDataUpdated notifier) {
         this.context = context;
+        this.notifier = notifier;
 
         dbHelper = new CalendarDBHelper(context);
         db = dbHelper.getWritableDatabase();
@@ -53,30 +58,29 @@ public class CalendarDAO extends BroadcastReceiver {
         lastSavedTimeTypes = lastTimePref.getLong(LAST_SAVED_TYPES_ID, 0);
     }
 
-    @Override
-    public void onReceive(Context context, Intent intent) {
-        switch (intent.getStringExtra("action")) {
-            case "schedule":
-                String name = intent.getStringExtra("name");
-                ArrayList<Schedule> schedules = intent.getParcelableArrayListExtra("schedules");
-
-                calendars.put(name, schedules);
-                saveCalendar(name, schedules);
-                break;
-            case "type":
-                for (String key : new String[]{"teachers", "classrooms", "groups"}) {
-                    types.put(key, intent.<CalendarType>getParcelableArrayListExtra(key));
-                }
-
-                saveCalendarType();
-                break;
+    public static CalendarDAO createSingleton(Context context, CalendarDataUpdated notifier) {
+        if (singleton != null) {
+            return singleton;
         }
+        singleton = new CalendarDAO(context, notifier);
+        return singleton;
+    }
+
+    public static CalendarDAO getSingleton() {
+        return singleton;
+    }
+
+    public interface CalendarDataUpdated {
+        void notifySchedulesChange(String name, ArrayList<Schedule> schedules);
     }
 
     public HashMap<String, ArrayList<CalendarType>> getCalendarTypes() {
         long current = new Date().getTime();
+
         if (types.isEmpty() || current - lastSavedTimeTypes > TIME_BEFORE_RELOAD) {
             downloadTypesData();
+        } else {
+            loadTypesFromDB();
         }
         return types;
     }
