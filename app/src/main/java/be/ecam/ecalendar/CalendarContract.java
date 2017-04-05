@@ -9,6 +9,7 @@ import android.provider.BaseColumns;
  public class CalendarContract {
     public static final class ScheduleEntry implements BaseColumns {
         public static final String TABLE_NAME = "schedule";
+        public static final String SCHEDULE_CALENDAR = "calendar";
         public static final String SCHEDULE_ACTIVITY_ID = "activity_id";
         public static final String SCHEDULE_ACTIVITY_NAME = "activity_name";
         public static final String SCHEDULE_START_TIME = "start_time";
