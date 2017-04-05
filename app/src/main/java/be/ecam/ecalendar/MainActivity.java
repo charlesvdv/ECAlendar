@@ -2,8 +2,10 @@ package be.ecam.ecalendar;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -13,6 +15,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.resultView);
+        recyclerView.setHasFixedSize(true);
+
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+
+        CalendarAdapter adapter = new CalendarAdapter();
+        CalendarDAO dao = CalendarDAO.createSingleton(this, adapter);
+        adapter.setCalendarData("serie_4EI5A", dao.getCalendar("serie_4EI5A"));
+        adapter.setCalendarData("serie_4EM2A", dao.getCalendar("serie_4EM2A"));
+        dao.getCalendarTypes();
+        recyclerView.setAdapter(adapter);
     }
 
     @Override
