@@ -3,7 +3,6 @@ package be.ecam.ecalendar;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -11,6 +10,7 @@ import java.util.Date;
  */
 
 public class Schedule implements Parcelable {
+    private String calendar;
     private String activityId;
     private Date startTime;
     private Date endTime;
@@ -19,9 +19,10 @@ public class Schedule implements Parcelable {
     private String teacher;
     private String classRoom;
 
-    Schedule(String id, Date start, Date end, String name, String group,
+    Schedule(String id, String calendar, Date start, Date end, String name, String group,
              String teacher, String classRoom) {
         this.activityId = id;
+        this.calendar = calendar;
         this.startTime = start;
         this.endTime = end;
         this.activityName = name;
@@ -32,6 +33,9 @@ public class Schedule implements Parcelable {
 
     protected Schedule(Parcel in) {
         activityId = in.readString();
+        calendar = in.readString();
+        startTime = new Date(in.readLong());
+        endTime = new Date(in.readLong());
         activityName = in.readString();
         group = in.readString();
         teacher = in.readString();
@@ -66,6 +70,10 @@ public class Schedule implements Parcelable {
         return classRoom;
     }
 
+    public String getCalendar() {
+        return calendar;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -74,8 +82,9 @@ public class Schedule implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(activityId);
-        dest.writeSerializable(startTime);
-        dest.writeSerializable(endTime);
+        dest.writeString(calendar);
+        dest.writeLong(startTime.getTime());
+        dest.writeLong(endTime.getTime());
         dest.writeString(activityName);
         dest.writeString(group);
         dest.writeString(teacher);
