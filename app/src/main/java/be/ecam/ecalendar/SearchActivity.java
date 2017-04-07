@@ -1,15 +1,21 @@
 package be.ecam.ecalendar;
 
+import android.content.Intent;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -28,10 +34,23 @@ public class SearchActivity extends AppCompatActivity {
         ArrayList<String> arrayType = new ArrayList<>();
         arrayType.addAll(Arrays.asList(getResources().getStringArray(R.array.array_type)));
 
-        adapter = new ArrayAdapter<String>(SearchActivity.this,
+        adapter = new ArrayAdapter<>(SearchActivity.this,
                 android.R.layout.simple_list_item_1,
                 arrayType);
         lv.setAdapter(adapter);
+
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position,
+                                    long id) {
+                String item = "Vous avez selectionné : ";
+                        item += ((TextView)view).getText().toString();
+
+
+                Toast.makeText(getBaseContext(), item, Toast.LENGTH_LONG).show();
+
+            }
+        });
 
         ActionBar actionBar = this.getSupportActionBar();
         if (actionBar != null) {
@@ -59,6 +78,8 @@ public class SearchActivity extends AppCompatActivity {
                 adapter.getFilter().filter(newText);
                 return false;
             }
+
+
         });
 
         return super.onCreateOptionsMenu(menu);
