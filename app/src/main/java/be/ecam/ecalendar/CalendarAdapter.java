@@ -23,7 +23,19 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
     // An array of all calendars sorted by date.
     ArrayList<Schedule> sortedSchedules;
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    private CalendarAdapterOnClickHandler clickHandler;
+
+    public interface CalendarAdapterOnClickHandler{
+        void onClick(Schedule schedule);
+    }
+
+    public CalendarAdapter(CalendarAdapterOnClickHandler clickHandler) {
+        calendars = new HashMap<>();
+        sortedSchedules = new ArrayList<>();
+        this.clickHandler = clickHandler;
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         public TextView titleTextView;
         public TextView timeTextView;
         public TextView classroomTextView;
@@ -32,12 +44,14 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
             titleTextView = (TextView) itemView.findViewById(R.id.title);
             timeTextView = (TextView) itemView.findViewById(R.id.time);
             classroomTextView = (TextView) itemView.findViewById(R.id.classroom);
+            itemView.setOnClickListener(this);
         }
-    }
 
-    public CalendarAdapter() {
-        calendars = new HashMap<>();
-        sortedSchedules = new ArrayList<>();
+        @Override
+        public void onClick(View v) {
+            int pos = getAdapterPosition();
+            clickHandler.onClick(sortedSchedules.get(pos));
+        }
     }
 
     public void setCalendarData(String name, ArrayList<Schedule> calendar) {
