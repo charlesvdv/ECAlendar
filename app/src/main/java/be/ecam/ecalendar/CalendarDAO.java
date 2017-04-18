@@ -99,6 +99,7 @@ public class CalendarDAO {
                 loadCalendarFromDB(name);
             }
         }
+        notifier.notifySchedulesChange(name, calendars.get(name));
         return calendars.get(name);
     }
 

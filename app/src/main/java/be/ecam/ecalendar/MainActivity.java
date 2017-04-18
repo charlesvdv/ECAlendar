@@ -6,10 +6,18 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity
+        implements CalendarDAO.CalendarDataUpdated {
+    private static final String TAG = MainActivity.class.getSimpleName();
+
+    RecyclerView.LayoutManager layoutManager;
+    CalendarAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,13 +27,13 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.resultView);
         recyclerView.setHasFixedSize(true);
 
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-        CalendarAdapter adapter = new CalendarAdapter();
-        CalendarDAO dao = CalendarDAO.createSingleton(this, adapter);
-        adapter.setCalendarData("serie_4EI5A", dao.getCalendar("serie_4EI5A"));
-        adapter.setCalendarData("serie_4EM2A", dao.getCalendar("serie_4EM2A"));
+        adapter = new CalendarAdapter();
+        CalendarDAO dao = CalendarDAO.createSingleton(this, this);
+        dao.getCalendar("serie_4EI5A");
+        dao.getCalendar("serie_4EM2A");
         dao.getCalendarTypes();
         recyclerView.setAdapter(adapter);
     }
@@ -54,4 +62,9 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void notifySchedulesChange(String name, ArrayList<Schedule> schedules) {
+        adapter.setCalendarData(name, schedules);
+        layoutManager.scrollToPosition(adapter.getCalendarPosition());
+    }
 }
