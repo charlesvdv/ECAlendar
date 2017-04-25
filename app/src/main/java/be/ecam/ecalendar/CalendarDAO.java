@@ -72,6 +72,7 @@ public class CalendarDAO {
 
     public interface CalendarDataUpdated {
         void notifySchedulesChange(String name, ArrayList<Schedule> schedules);
+        void notifyCalendarTypesChanges(HashMap<String, ArrayList<CalendarType>> types);
     }
 
     public HashMap<String, ArrayList<CalendarType>> getCalendarTypes() {
@@ -82,6 +83,7 @@ public class CalendarDAO {
         } else {
             loadTypesFromDB();
         }
+        notifier.notifyCalendarTypesChanges(types);
         return types;
     }
 

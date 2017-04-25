@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity
         implements CalendarDAO.CalendarDataUpdated, CalendarAdapter.CalendarAdapterOnClickHandler {
@@ -73,5 +74,10 @@ public class MainActivity extends AppCompatActivity
         adapter.setCalendarData(name, schedules);
         layoutManager.scrollToPosition(adapter.getCalendarPosition());
 
+    }
+
+    @Override
+    public void notifyCalendarTypesChanges(HashMap<String, ArrayList<CalendarType>> types) {
+        // Do nothings.
     }
 }
