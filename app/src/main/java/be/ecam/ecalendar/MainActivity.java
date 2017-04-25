@@ -6,6 +6,10 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -18,12 +22,25 @@ import java.util.ArrayList;
 
 import edu.emory.mathcs.backport.java.util.Arrays;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements CalendarAdapter.CalendarAdapterOnClickHandler {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.resultView);
+        recyclerView.setHasFixedSize(true);
+
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+
+        CalendarAdapter adapter = new CalendarAdapter(this);
+        CalendarDAO dao = CalendarDAO.createSingleton(this, adapter);
+        adapter.setCalendarData("serie_4EI5A", dao.getCalendar("serie_4EI5A"));
+        adapter.setCalendarData("serie_4EM2A", dao.getCalendar("serie_4EM2A"));
+        dao.getCalendarTypes();
+        recyclerView.setAdapter(adapter);
     }
 
     @Override
@@ -57,4 +74,10 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onClick(Schedule schedule) {
+        Intent intent = new Intent (this,DetailActivity.class);
+        intent.putExtra("schedule", schedule);
+        startActivity(intent);
+    }
 }

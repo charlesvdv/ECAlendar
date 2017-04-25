@@ -3,4 +3,14 @@
     <color name="colorPrimary">	#9a141d</color>
     <color name="colorPrimaryDark">	#9a141d</color>
     <color name="colorAccent">	#9a141d</color>
+    <color name="colorTitle">   #00244c</color>
+
+    <array name="titleColors">
+        <item name="DarkMagenta">#8B008B</item>
+        <item name="Gray">#808080</item>
+        <item name="LightYellow">#FFFFE0</item>
+        <item name="Yellow">#FFFF00</item>
+        <item name="Snow">#9a141d</item>
+    </array>
 </resources>
+

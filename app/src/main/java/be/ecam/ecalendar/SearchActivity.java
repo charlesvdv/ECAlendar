@@ -1,6 +1,8 @@
 package be.ecam.ecalendar;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -46,6 +48,13 @@ public class SearchActivity extends AppCompatActivity {
                 String item = "Vous avez selectionné : ";
                         item += ((TextView)view).getText().toString();
 
+                //Chnaged from last working version, to test on android device
+                SharedPreferences sharedPreferences = getSharedPreferences("scheduleToShow",
+                        Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("id", ((TextView)view).getText().toString());
+
+                editor.commit();
 
                 Toast.makeText(getBaseContext(), item, Toast.LENGTH_LONG).show();
 
