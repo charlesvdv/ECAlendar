@@ -19,11 +19,13 @@ public class DetailActivity extends AppCompatActivity {
         TextView timeTextView =(TextView) this.findViewById(R.id.time);
         TextView classroomTextView =(TextView) this.findViewById(R.id.classroom);
         TextView teacherTextView =(TextView) this.findViewById(R.id.teacher);
+        TextView groupTextView =(TextView) this.findViewById(R.id.group);
 
 
         titleTextView.setText(schedule.getActivityName());
         timeTextView.setText(schedule.getStartTime().toString() + " - " + schedule.getEndTime().toString());
         classroomTextView.setText(schedule.getClassRoom());
         teacherTextView.setText(schedule.getTeacher());
+        groupTextView.setText(schedule.getGroup());
     }
 }
