@@ -20,10 +20,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import edu.emory.mathcs.backport.java.util.Arrays;
 
-public class SearchActivity extends AppCompatActivity {
+public class SearchActivity extends AppCompatActivity implements CalendarDAO.CalendarDataUpdated{
 
     ArrayAdapter<String> adapter;
 
@@ -32,39 +34,13 @@ public class SearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        ListView lv = (ListView)findViewById(R.id.listViewType);
-        ArrayList<String> arrayType = new ArrayList<>();
-        arrayType.addAll(Arrays.asList(getResources().getStringArray(R.array.array_type)));
-
-        adapter = new ArrayAdapter<>(SearchActivity.this,
-                android.R.layout.simple_list_item_1,
-                arrayType);
-        lv.setAdapter(adapter);
-
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position,
-                                    long id) {
-                String item = "Vous avez selectionné : ";
-                        item += ((TextView)view).getText().toString();
-
-                SharedPreferences sharedPreferences = getSharedPreferences("scheduleToShow",
-                        Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString("id", ((TextView)view).getText().toString());
-
-                editor.commit();
-
-                Toast.makeText(getBaseContext(), item, Toast.LENGTH_LONG).show();
-
-            }
-        });
+        CalendarDAO dao = CalendarDAO.getSingleton(this);
+        dao.getCalendarTypes();
 
         ActionBar actionBar = this.getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-
     }
 
     @Override
@@ -86,13 +62,52 @@ public class SearchActivity extends AppCompatActivity {
                 adapter.getFilter().filter(newText);
                 return false;
             }
-
-
         });
 
         return super.onCreateOptionsMenu(menu);
     }
 
+    @Override
+    public void notifySchedulesChange(String name, ArrayList<Schedule> schedules) {
+        //nothing to do
+    }
+
+    @Override
+    public void notifyCalendarTypesChanges(HashMap<String, ArrayList<CalendarType>> types) {
+        ArrayList<String> entries = new ArrayList<>();
+        for (Map.Entry<String, ArrayList<CalendarType>> typeList : types.entrySet()) {
+            for (CalendarType ct : typeList.getValue()) {
+                entries.add(ct.getId());
+            }
+        }
+
+        ListView lv = (ListView)findViewById(R.id.listViewType);
+
+        adapter = new ArrayAdapter<>(SearchActivity.this,
+                android.R.layout.simple_list_item_1,
+                entries);
+        lv.setAdapter(adapter);
+
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position,
+                                    long id) {
+                String item = "Vous avez selectionné : ";
+                item += ((TextView)view).getText().toString();
+
+                SharedPreferences sharedPreferences = getSharedPreferences("scheduleToShow",
+                        Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("id", ((TextView)view).getText().toString());
+
+                editor.commit();
+
+                Toast.makeText(getBaseContext(), item, Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    // TODO : Usefull in the futur ?
     /*
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

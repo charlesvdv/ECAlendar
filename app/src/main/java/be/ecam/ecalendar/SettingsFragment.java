@@ -48,7 +48,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
         });
     }
 
-
     @Override
     public void notifySchedulesChange(String name, ArrayList<Schedule> schedules) {
         //Nothing to do

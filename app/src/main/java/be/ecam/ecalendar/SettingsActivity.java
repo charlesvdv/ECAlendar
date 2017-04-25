@@ -16,7 +16,6 @@ import android.view.MenuItem;
 
 public class SettingsActivity extends AppCompatActivity {
 
-    private Preference pref; 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
