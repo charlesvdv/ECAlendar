@@ -26,7 +26,7 @@
             android:textStyle="bold"/>
 
         <TextView
-            android:id="@+id/classroom"
+            android:id="@+id/group"
             android:layout_width="63dp"
             android:layout_height="match_parent"
             android:paddingTop="10dp"
