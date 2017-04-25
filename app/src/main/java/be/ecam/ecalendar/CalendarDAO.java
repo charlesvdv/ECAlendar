@@ -31,7 +31,7 @@ public class CalendarDAO {
     private static CalendarDAO singleton;
 
     private Context context;
-    private CalendarDataUpdated notifier;
+    private ArrayList<CalendarDataUpdated> notifiers;
 
     private CalendarDBHelper dbHelper;
     private SQLiteDatabase db;
@@ -44,7 +44,9 @@ public class CalendarDAO {
 
     private CalendarDAO(Context context, CalendarDataUpdated notifier) {
         this.context = context;
-        this.notifier = notifier;
+
+        this.notifiers = new ArrayList<>();
+        this.notifiers.add(notifier);
 
         dbHelper = new CalendarDBHelper(context);
         db = dbHelper.getWritableDatabase();
@@ -70,9 +72,18 @@ public class CalendarDAO {
         return singleton;
     }
 
+    public static CalendarDAO getSingleton(CalendarDataUpdated notifier) {
+        singleton.addNotifier(notifier);
+        return singleton;
+    }
+
     public interface CalendarDataUpdated {
         void notifySchedulesChange(String name, ArrayList<Schedule> schedules);
         void notifyCalendarTypesChanges(HashMap<String, ArrayList<CalendarType>> types);
+    }
+
+    public void addNotifier(CalendarDataUpdated notifier) {
+        notifiers.add(notifier);
     }
 
     public HashMap<String, ArrayList<CalendarType>> getCalendarTypes() {
@@ -83,7 +94,10 @@ public class CalendarDAO {
         } else {
             loadTypesFromDB();
         }
-        notifier.notifyCalendarTypesChanges(types);
+
+        for (CalendarDataUpdated noti : notifiers) {
+            noti.notifyCalendarTypesChanges(types);
+        }
         return types;
     }
 
@@ -101,7 +115,10 @@ public class CalendarDAO {
                 loadCalendarFromDB(name);
             }
         }
-        notifier.notifySchedulesChange(name, calendars.get(name));
+
+        for (CalendarDataUpdated noti : notifiers) {
+            noti.notifySchedulesChange(name, calendars.get(name));
+        }
         return calendars.get(name);
     }
 
@@ -206,8 +223,7 @@ public class CalendarDAO {
     public void updateCalendar(String name, ArrayList<Schedule> schedules) {
         // Update in-memory data
         calendars.put(name, schedules);
-        // Notify that data has changed
-        notifier.notifySchedulesChange(name, schedules);
+
         // Remove previously saved calendar data with the name.
         db.delete(ScheduleEntry.TABLE_NAME,
                 ScheduleEntry.SCHEDULE_CALENDAR + "=?", new String[] { name });
