@@ -48,7 +48,6 @@ public class SearchActivity extends AppCompatActivity {
                 String item = "Vous avez selectionné : ";
                         item += ((TextView)view).getText().toString();
 
-                //Chnaged from last working version, to test on android device
                 SharedPreferences sharedPreferences = getSharedPreferences("scheduleToShow",
                         Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();

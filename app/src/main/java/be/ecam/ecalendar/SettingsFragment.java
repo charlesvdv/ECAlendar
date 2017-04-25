@@ -1,9 +1,13 @@
 package be.ecam.ecalendar;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.preference.ListPreference;
+import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
+import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,9 +26,28 @@ public class SettingsFragment extends PreferenceFragmentCompat
     public void onCreatePreferences(Bundle bundle, String s) {
         addPreferencesFromResource(R.xml.pref_settings);
 
-        CalendarDAO dao = CalendarDAO.createSingleton(getActivity(), this);
+        CalendarDAO dao = CalendarDAO.getSingleton(this);
         dao.getCalendarTypes();
+
+
+        ListPreference pref = (ListPreference) findPreference("pref_section");
+
+        pref.setSummary(pref.getValue());
+
+        pref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object val) {
+                ListPreference pref = (ListPreference) findPreference("pref_section");
+                pref.setSummary(val.toString());
+                String chose = "Votre horaire principal est : " + val.toString();
+                Toast.makeText(getActivity(), chose, Toast.LENGTH_LONG).show();
+
+                return true;
+            }
+        });
     }
+
 
     @Override
     public void notifySchedulesChange(String name, ArrayList<Schedule> schedules) {
@@ -33,19 +56,19 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
     @Override
     public void notifyCalendarTypesChanges(HashMap<String, ArrayList<CalendarType>> types) {
-        Log.d("grgtgtrg", "czlledd!!");
-        ArrayList<CalendarType> entries = new ArrayList<>();
+        ArrayList<String> entries = new ArrayList<>();
         for (Map.Entry<String, ArrayList<CalendarType>> typeList : types.entrySet()) {
-            entries.addAll(typeList.getValue());
+            for (CalendarType ct : typeList.getValue()) {
+                entries.add(ct.getId());
+            }
         }
 
-        CharSequence[] calendarType = entries.toArray(new CharSequence[entries.size()]);
+        CharSequence[] calendarChose = entries.toArray(new CharSequence[entries.size()]);
 
         ListPreference listPreference = (ListPreference) findPreference("pref_section");
 
-        CharSequence[] test = { "English", "French"};
-
-        listPreference.setEntries(test);
-        listPreference.setEntryValues(test);
+        listPreference.setEntries(calendarChose);
+        listPreference.setEntryValues(calendarChose);
     }
+
 }
