@@ -57,7 +57,6 @@ public class CalendarDAO {
 
         lastTimePref = context.getSharedPreferences(LAST_SAVED_PREF_FILE_KEY,
                 Context.MODE_PRIVATE);
-        lastSavedTimeTypes = lastTimePref.getLong(LAST_SAVED_TYPES_ID, 0);
     }
 
     public static CalendarDAO createSingleton(Context context, CalendarDataUpdated notifier) {
@@ -88,11 +87,14 @@ public class CalendarDAO {
 
     public HashMap<String, ArrayList<CalendarType>> getCalendarTypes() {
         long current = new Date().getTime();
+        long lastSaved = lastTimePref.getLong(LAST_SAVED_TYPES_ID, 0);
 
-        if (types.isEmpty() || current - lastSavedTimeTypes > TIME_BEFORE_RELOAD) {
-            downloadTypesData();
-        } else {
-            loadTypesFromDB();
+        if (types.isEmpty()) {
+            if (current - lastSaved > TIME_BEFORE_RELOAD) {
+                downloadTypesData();
+            } else {
+                loadTypesFromDB();
+            }
         }
 
         for (CalendarDataUpdated noti : notifiers) {
@@ -200,7 +202,6 @@ public class CalendarDAO {
         }
 
         saveLastQueryTime(LAST_SAVED_TYPES_ID);
-        lastSavedTimeTypes = new Date().getTime();
     }
 
     private ArrayList<CalendarType> removeDuplicate(ArrayList<CalendarType> types) {
