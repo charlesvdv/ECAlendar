@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new CalendarAdapter(this);
+        adapter = new CalendarAdapter(this, getResources().getIntArray(R.array.titleColors));
         CalendarDAO dao = CalendarDAO.createSingleton(this, this);
         dao.getCalendar("serie_4EI5A");
         dao.getCalendar("serie_4EM2A");
