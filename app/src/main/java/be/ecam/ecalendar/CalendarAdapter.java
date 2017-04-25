@@ -38,12 +38,12 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         public TextView titleTextView;
         public TextView timeTextView;
-        public TextView classroomTextView;
+        public TextView groupTextView;
         public ViewHolder(View itemView) {
             super(itemView);
             titleTextView = (TextView) itemView.findViewById(R.id.title);
             timeTextView = (TextView) itemView.findViewById(R.id.time);
-            classroomTextView = (TextView) itemView.findViewById(R.id.classroom);
+            groupTextView = (TextView) itemView.findViewById(R.id.group);
             itemView.setOnClickListener(this);
         }
 
@@ -108,7 +108,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
         holder.titleTextView.setText(schedule.getActivityName());
         holder.timeTextView.setText(schedule.getStartTime().toString() + " - " +
             schedule.getEndTime().toString());
-        holder.classroomTextView.setText(schedule.getClassRoom());
+        holder.groupTextView.setText(schedule.getGroup());
     }
 
     @Override
