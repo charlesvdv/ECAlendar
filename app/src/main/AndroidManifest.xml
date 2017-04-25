@@ -3,6 +3,7 @@
     package="be.ecam.ecalendar">
 
     <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -27,6 +28,14 @@
                 android:value=".MainActivity" />
         </activity>
         <activity
+            android:name=".SearchActivity"
+            android:label="@string/title_activity_search"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+        <activity
             android:name=".DetailActivity"
             android:label="@string/detail_label"
             android:parentActivityName=".MainActivity">
@@ -34,6 +43,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
+
         <service
             android:name=".CalendarLoader"
             android:exported="false" />
