@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -111,8 +112,11 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
         Schedule schedule = sortedSchedules.get(pos);
 
         holder.titleTextView.setText(schedule.getActivityName());
-        holder.timeTextView.setText(schedule.getStartTime().toString() + " - " +
-            schedule.getEndTime().toString());
+
+        SimpleDateFormat dt = new SimpleDateFormat("dd-MM-yyyy hh:mm");
+        holder.timeTextView.setText(dt.format(schedule.getStartTime()) + " / " +
+                dt.format(schedule.getEndTime()));
+
         holder.groupTextView.setText(schedule.getGroup());
     }
 
