@@ -1,6 +1,7 @@
 package be.ecam.ecalendar;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,14 +10,14 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 
 /**
  * Created by charles on 3/28/17.
  */
 
-public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHolder>
-        implements CalendarDAO.CalendarDataUpdated {
+public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHolder> {
     private static final String TAG = CalendarAdapter.class.getSimpleName();
 
     HashMap<String, ArrayList<Schedule>> calendars;
@@ -59,12 +60,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
             // Do nothing because we still don't have any data available.
             return;
         }
-        notifySchedulesChange(name, calendar);
-    }
-
-    @Override
-    public void notifySchedulesChange(String name, ArrayList<Schedule> schedules) {
-        calendars.put(name, schedules);
+        calendars.put(name, calendar);
 
         sortedSchedules.clear();
         for (ArrayList<Schedule> cal : calendars.values()) {
@@ -94,6 +90,15 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
         notifyDataSetChanged();
     }
 
+    public int getCalendarPosition() {
+        long currentTime = new Date().getTime();
+        for (int pos = 0; pos < sortedSchedules.size(); pos++) {
+            if (currentTime < sortedSchedules.get(pos).getStartTime().getTime()) {
+                return pos;
+            }
+        }
+        return 0;
+    }
     @Override
     public CalendarAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
