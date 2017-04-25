@@ -6,11 +6,11 @@
     <color name="colorTitle">   #00244c</color>
 
     <array name="titleColors">
-        <item name="DarkMagenta">#8B008B</item>
-        <item name="Gray">#808080</item>
-        <item name="LightYellow">#FFFFE0</item>
-        <item name="Yellow">#FFFF00</item>
-        <item name="Snow">#9a141d</item>
+        <item name="color1">#692e42</item>
+        <item name="color2">#513261</item>
+        <item name="color3">#322f77</item>
+        <item name="color4">#180a6c</item>
+        <item name="color5">#530505</item>
     </array>
 </resources>
 
