@@ -6,5 +6,6 @@
         android:key="pref_section"
         android:title="Section"
         android:summary="Selectionnez votre section"
-        />
+        android:entries="@array/test"
+        android:entryValues="@array/test" />
 </PreferenceScreen>
