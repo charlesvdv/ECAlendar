@@ -1,15 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- TODO redefine it the right way -->
 <resources>
-    <array name="schedule_labels">
-        <item>3BE</item>
-        <item>4EI</item>
-        <item>4EO</item>
-    </array>
-
-    <array name="schedule_values">
-        <item>3BE</item>
-        <item>4EI</item>
-        <item>4EO</item>
-    </array>
+    <string-array name="test">
+        <item>Eng</item>
+    </string-array>
 </resources>
