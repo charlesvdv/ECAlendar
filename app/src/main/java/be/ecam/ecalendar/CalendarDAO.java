@@ -31,7 +31,7 @@ public class CalendarDAO {
     private static CalendarDAO singleton;
 
     private Context context;
-    private CalendarDataUpdated notifier;
+    private ArrayList<CalendarDataUpdated> notifiers;
 
     private CalendarDBHelper dbHelper;
     private SQLiteDatabase db;
@@ -44,7 +44,9 @@ public class CalendarDAO {
 
     private CalendarDAO(Context context, CalendarDataUpdated notifier) {
         this.context = context;
-        this.notifier = notifier;
+
+        this.notifiers = new ArrayList<>();
+        this.notifiers.add(notifier);
 
         dbHelper = new CalendarDBHelper(context);
         db = dbHelper.getWritableDatabase();
@@ -55,7 +57,6 @@ public class CalendarDAO {
 
         lastTimePref = context.getSharedPreferences(LAST_SAVED_PREF_FILE_KEY,
                 Context.MODE_PRIVATE);
-        lastSavedTimeTypes = lastTimePref.getLong(LAST_SAVED_TYPES_ID, 0);
     }
 
     public static CalendarDAO createSingleton(Context context, CalendarDataUpdated notifier) {
@@ -70,20 +71,35 @@ public class CalendarDAO {
         return singleton;
     }
 
+    public static CalendarDAO getSingleton(CalendarDataUpdated notifier) {
+        singleton.addNotifier(notifier);
+        return singleton;
+    }
+
     public interface CalendarDataUpdated {
         void notifySchedulesChange(String name, ArrayList<Schedule> schedules);
         void notifyCalendarTypesChanges(HashMap<String, ArrayList<CalendarType>> types);
     }
 
+    public void addNotifier(CalendarDataUpdated notifier) {
+        notifiers.add(notifier);
+    }
+
     public HashMap<String, ArrayList<CalendarType>> getCalendarTypes() {
         long current = new Date().getTime();
+        long lastSaved = lastTimePref.getLong(LAST_SAVED_TYPES_ID, 0);
 
-        if (types.isEmpty() || current - lastSavedTimeTypes > TIME_BEFORE_RELOAD) {
-            downloadTypesData();
-        } else {
-            loadTypesFromDB();
+        if (types.isEmpty()) {
+            if (current - lastSaved > TIME_BEFORE_RELOAD) {
+                downloadTypesData();
+            } else {
+                loadTypesFromDB();
+            }
         }
-        notifier.notifyCalendarTypesChanges(types);
+
+        for (CalendarDataUpdated noti : notifiers) {
+            noti.notifyCalendarTypesChanges(types);
+        }
         return types;
     }
 
@@ -101,7 +117,10 @@ public class CalendarDAO {
                 loadCalendarFromDB(name);
             }
         }
-        notifier.notifySchedulesChange(name, calendars.get(name));
+
+        for (CalendarDataUpdated noti : notifiers) {
+            noti.notifySchedulesChange(name, calendars.get(name));
+        }
         return calendars.get(name);
     }
 
@@ -183,7 +202,6 @@ public class CalendarDAO {
         }
 
         saveLastQueryTime(LAST_SAVED_TYPES_ID);
-        lastSavedTimeTypes = new Date().getTime();
     }
 
     private ArrayList<CalendarType> removeDuplicate(ArrayList<CalendarType> types) {
@@ -206,8 +224,7 @@ public class CalendarDAO {
     public void updateCalendar(String name, ArrayList<Schedule> schedules) {
         // Update in-memory data
         calendars.put(name, schedules);
-        // Notify that data has changed
-        notifier.notifySchedulesChange(name, schedules);
+
         // Remove previously saved calendar data with the name.
         db.delete(ScheduleEntry.TABLE_NAME,
                 ScheduleEntry.SCHEDULE_CALENDAR + "=?", new String[] { name });
