@@ -113,7 +113,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
 
         holder.titleTextView.setText(schedule.getActivityName());
 
-        SimpleDateFormat dt = new SimpleDateFormat("dd-MM-yyyy hh:mm");
+        SimpleDateFormat dt = new SimpleDateFormat("h:mm");
         holder.timeTextView.setText(dt.format(schedule.getStartTime()) + " / " +
                 dt.format(schedule.getEndTime()));
 
