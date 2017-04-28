@@ -185,7 +185,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             Log.d(TAG, schedule.getCalendar());
             itemViewHolder.titleLayout.setBackgroundColor(colorMap.get(schedule.getCalendar()));
           
-            SimpleDateFormat dt = new SimpleDateFormat("hh:mm");
+            SimpleDateFormat dt = new SimpleDateFormat("h:mm");
             itemViewHolder.timeTextView.setText(dt.format(schedule.getStartTime()) + " / " +
                 dt.format(schedule.getEndTime()));
           
