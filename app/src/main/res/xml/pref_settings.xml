@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-
     <ListPreference
-        android:defaultValue="4EI"
-        android:entries="@array/schedule_labels"
-        android:entryValues="@array/schedule_values"
-        android:key="schedule"
-        android:title="@string/cal_type"/>
-
+        android:key="pref_section"
+        android:title="Section"
+        android:summary="Selectionnez votre section"
+        android:entries="@array/test"
+        android:entryValues="@array/test" />
 </PreferenceScreen>
