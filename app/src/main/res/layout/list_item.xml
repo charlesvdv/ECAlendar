@@ -10,36 +10,29 @@
         android:id="@+id/titleLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/holo_green_light"
-        android:weightSum="1">
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp">
         <TextView
             android:id="@+id/title"
-            android:layout_width="181dp"
+            android:layout_width="200sp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.69"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
+            android:paddingLeft="10sp"
+            android:paddingRight="10sp"
             android:textSize="14sp"
+            android:textColor="@color/colorTitle"
             android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/group"
-            android:layout_width="63dp"
+            android:layout_width="80sp"
             android:layout_height="match_parent"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:layout_weight="0.31" />
+            android:textColor="@color/colorTitle"
+            android:textStyle="bold"/>
     </LinearLayout>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
 
     <TextView
         android:id="@+id/time"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="2dp"/>
+        android:paddingTop="10sp"/>
 </LinearLayout>

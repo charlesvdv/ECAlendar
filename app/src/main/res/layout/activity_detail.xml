@@ -12,59 +12,74 @@
     tools:context="be.ecam.ecalendar.DetailActivity">
 
     <TextView
-        android:id="@+id/classroom"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:paddingTop="15dp"
-        android:paddingBottom="15dp"
-        android:textSize="70dp"
-        android:textStyle="bold"
-        android:layout_marginBottom="41dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true" />
-
-    <TextView
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="15dp"
-        android:paddingBottom="15dp"
-        android:textSize="14sp"
-        android:textColor="@color/colorTitle"
+        android:textSize="30sp"
+        android:textColor="@color/detailTitle"
         android:textStyle="bold"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
-
-    <TextView
-        android:id="@+id/group"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="15dp"
-        android:paddingBottom="15dp"
-        android:layout_marginTop="11dp"
-        android:layout_below="@+id/title"
-        android:layout_alignParentStart="true" />
-
-    <TextView
-        android:id="@+id/teacher"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="15dp"
-        android:paddingBottom="15dp"
-        android:layout_marginTop="14dp"
-        android:layout_below="@+id/group"
-        android:layout_alignParentStart="true" />
+        android:paddingTop="20sp"
+        android:layout_alignParentTop="true"/>
 
     <TextView
         android:id="@+id/time"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="2dp"
-        android:paddingBottom="15dp"
-        android:layout_below="@+id/teacher"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="16dp" />
+        android:layout_below="@id/title"
+        android:textSize="20sp"
+        android:paddingTop="24sp"/>
 
+    <LinearLayout
+        android:id="@+id/groupLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/time"
+        android:textSize="20sp"
+        android:paddingTop="24sp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="section : "
+            android:textSize="20sp"
+            android:textColor="@color/Black"/>
+
+        <TextView
+            android:id="@+id/group"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textSize="20sp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/teacherLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/groupLayout"
+        android:paddingTop="24sp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="enseignant : "
+            android:textSize="20sp"
+            android:textColor="@color/Black"/>
+
+        <TextView
+            android:id="@+id/teacher"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textSize="20sp"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/classroom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingBottom="35sp"
+        android:textSize="70sp"
+        android:textStyle="bold"
+        android:layout_alignParentBottom="true" />
 
 </RelativeLayout>

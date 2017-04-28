@@ -10,7 +10,6 @@
         android:id="@+id/titleLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/holo_green_light"
         android:weightSum="1">
         <TextView
             android:id="@+id/title"
@@ -31,7 +30,9 @@
             android:layout_height="match_parent"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
-            android:layout_weight="0.31" />
+            android:layout_weight="0.31"
+            android:textColor="@color/colorTitle"
+            android:textStyle="bold"/>
     </LinearLayout>
 
     <TextView
