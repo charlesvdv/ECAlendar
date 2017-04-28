@@ -1,11 +1,19 @@
 <resources>
     <string name="app_name">ECAlendar</string>
     <string name="change_settings">Settings</string>
+    <string-array name="array_type">
+        <item>3BE</item>
+        <item>4EI</item>
+        <item>4EO</item>
+        <item>5EI</item>
+        <item>5EO</item>
+    </string-array>
     <string name="cal_type">Section</string>
     <string name="main_label">ECAlendar</string>
     <string name="detail_label">Détail du cours</string>
 
     <string name="title_activity_settings">Settings</string>
+    <string name="title_activity_search">Search</string>
 
     <!-- Strings related to Settings -->
 
