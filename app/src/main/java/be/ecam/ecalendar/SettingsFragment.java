@@ -29,7 +29,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
         CalendarDAO dao = CalendarDAO.getSingleton(this);
         dao.getCalendarTypes();
 
-
         ListPreference pref = (ListPreference) findPreference("pref_section");
 
         pref.setSummary(pref.getValue());
@@ -69,5 +68,4 @@ public class SettingsFragment extends PreferenceFragmentCompat
         listPreference.setEntries(calendarChose);
         listPreference.setEntryValues(calendarChose);
     }
-
 }

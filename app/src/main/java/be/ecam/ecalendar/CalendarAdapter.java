@@ -45,7 +45,6 @@ public class CalendarAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         this.availableColor = availableColor;
     }
 
-
     public class ItemViewHolder extends RecyclerView.ViewHolder implements  View.OnClickListener {
         public TextView titleTextView;
         public TextView timeTextView;

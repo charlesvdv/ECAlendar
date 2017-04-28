@@ -28,19 +28,28 @@ import edu.emory.mathcs.backport.java.util.Arrays;
 public class SearchActivity extends AppCompatActivity implements CalendarDAO.CalendarDataUpdated{
 
     ArrayAdapter<String> adapter;
-
+    CalendarDAO dao;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        CalendarDAO dao = CalendarDAO.getSingleton(this);
+        dao = CalendarDAO.getSingleton(this);
         dao.getCalendarTypes();
 
         ActionBar actionBar = this.getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if(id == android.R.id.home) {
+            NavUtils.navigateUpFromSameTask(this);
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -90,17 +99,19 @@ public class SearchActivity extends AppCompatActivity implements CalendarDAO.Cal
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position,
-                                    long id) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String calendarId = ((TextView)view).getText().toString();
                 String item = "Vous avez selectionné : ";
-                item += ((TextView)view).getText().toString();
+                item += calendarId;
 
-                SharedPreferences sharedPreferences = getSharedPreferences("scheduleToShow",
+                SharedPreferences sharedPreferences = getSharedPreferences("other_section",
                         Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString("id", ((TextView)view).getText().toString());
+                editor.putString("id", calendarId);
 
                 editor.commit();
+
+                dao.getCalendar(calendarId);
 
                 Toast.makeText(getBaseContext(), item, Toast.LENGTH_LONG).show();
             }
@@ -118,5 +129,4 @@ public class SearchActivity extends AppCompatActivity implements CalendarDAO.Cal
         return super.onOptionsItemSelected(item);
     }
     */
-
 }
