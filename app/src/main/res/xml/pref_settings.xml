@@ -5,6 +5,5 @@
         android:title="Section"
         android:summary="Selectionnez votre section"
         android:entries="@array/def"
-        android:entryValues="@array/def"
-        android:defaultValue="def"/>
+        android:entryValues="@array/def"/>
 </PreferenceScreen>
