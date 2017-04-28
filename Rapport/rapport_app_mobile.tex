@@ -4,7 +4,7 @@
 \usepackage{siunitx} % Provides the \SI{}{} and \si{} command for typesetting SI units
 \usepackage{graphicx} % Required for the inclusion of images
 \usepackage{natbib} % Required to change bibliography style to APA
-\usepackage{amsmath} % Required for some math elements 
+\usepackage{amsmath} % Required for some math elements
 \usepackage[utf8x]{inputenc}
 \usepackage{hyperref}
 
@@ -27,40 +27,78 @@
 \date{\today} % Date for the report
 
 \begin{document}
-	
+
 	\maketitle % Insert the title, author and date
-	
-	
+
+
 	\section*{Introduction}
 	\hspace{0.45cm}
 	Dans le cadre du cours d'applications mobiles, nous avons réalisé une application Android "ECAlendar" à l'aide d'Android Studio. Cette dernière utilise l'API de 'Ecam Calendar" afin de permettre aux étudiants de consulter leurs horaires directement sur leurs GSM.\\
-	
-	Dans ce rapport, nous allons présenter la manière dont nous nous sommes organisés en groupe mais aussi la structure de notre application ainsi qu'un listing de ses fonctionnalités. 
-	
+
+	Dans ce rapport, nous allons présenter la manière dont nous nous sommes organisés en groupe mais aussi la structure de notre application ainsi qu'un listing de ses fonctionnalités.
+
 	\section{Organisation du groupe}
 	\hspace{0.45cm}
 	 Nous avons hébergé notre projet sur Github de manière à faciliter le travail en groupe et nous sommes répartis les tâches comme suit lors de la première séance:
 	 \begin{itemize}
 	 	\item Charles:
 	 	\item Lorenzo:
-	 	\item Antoine:
+	 	\item Antoine: Gestion des préférences, analyse est création des modèles requis et gestion de recherche de calendrier
 	 	\item Gaetano:
 	 	\item Sylvain: intégration de la base de données SQLite et gestion des clics (affichage des détails lorsque l'utilisateur appuie sur un élément).
 	 \end{itemize}
-	 
-	
+
 	\section{Présentation de l'architecture (diagramme de classes)}
 	\hspace{0.45cm}
-	
+
 	\section{Listing des fonctionnalités}
 	\hspace{0.45cm}
-	
+		\begin{itemize}
+			\item Affichage de calendrier reprennant son horraire personnel
+			\item Recherche parmis les calendrier disponible via l'API de l'ECAM
+			\item Affichage simultané d'un second calendrier au choix pour comparer des horaires (local, professeur et étudiant)
+		\end{itemize}
+
+	\section{Explication des différentes parties de l'applicaiton}
+	\subsection{Création des modèles}
+		Avant de commencer à développer l'application, nous avons du analyser ce qui est renvoyé par l'API proposé par ecam calendar
+		afin de réaliser un modèle des données que nous allons devoir stocker. Nous avons décider de créer deux modèles différents :
+		Schedule et calendarType. \
+		Schedule stocke toutes les informations relative à un calendrier en particuler : Local, date et heure,
+		professeur, note, nom de l'activité, personne concernée par groupe, ... \
+		CalendarType quant à lui permet de sauver les différents calendrier disponible via un ID et une description du l'année/section,
+		du professeur ou du local. \
+
+		Tout au long de l'application nous utiliserons ces modèles pour créer des objets utilisables par chacune des parties.
+
+
+	\subsection{Gestion des préférences}
+		Pour ce qui est des préférences, nous avons simplement effectuer une préférence activity, accesible via le menu Android de l'application,
+		et composée d'un fragment de préférence affichant une liste d'horraire disponible
+		qui permet à l'étudiant de séléctionner son horaire personnel, en l'occurence l'année dans laquelle il se trouve et sa série. \
+		Au premier lancement de l'application, l'activité princinpale n'affichera pas de calendrier et nous demandera de nous rendre dans
+		l'onglet préférence afin de séléctionner l'année désirée. \
+		A partir de ce menu, nous avons développer une "Up Navigation" qui permet de retrouner directement à la l'activité principale montrant
+		le calendrier séléctionné. Notons que nous pouvons également utilisé le boutton back nativement présent sur les smartphone Android.
+
+	\subsection{Recherche d'un second calendier}
+		L'application permet à l'utilisateur de séléctionner deux calendrier à la fois : Le sien comme principale via les préférence et
+		un second pour pouvoir comparer deux calendrier par exemple.  \
+		Pour en séléctionner un second, nous avons ajouter une petite loupe dans le menu Android de l'application qui nous amène à une autre
+		activité nommée searchActivity. Cette activité nous montre une liste, scrolable, de tous les calendrier disponible via l'API calender de l'ECAM.
+		En clicant une seconde fois sur cette loupe nous faisons apparaitre un clavier qui permet de rentrer du texte afin de rechercher
+		un calendrier particuler. \
+		La recherche permettra à l'utilisateur de visualiser au fûr et à mesure qu'il tape, les calendriers disponible en fonction du
+		texte qu'il complète afin de simplifier la séléction désirée. \\
+		L'utilisateur pourra ensuite cliquer  sur le calendrier de son choix, il recevra une confirmation de ce choix via un message toast,
+		et pourra retourner à l'activité principale via la "Up Navigation" ou encore le boutton back natif android. La valeur du calendrier
+		sera alors stockée dans un sharedpréférence disponible pour le reste de l'applicaiton.
+		Une fois sur l'acivité principale, le second calendrier sera disponible pour l'utilisateur. \
+		A chaque redémarage de l'applicaiton ou changement de la section dans les préférence de l'application (onDestroy de la mainactivity),
+		cette sharedPreference sera remise à zéro pour ne plus apparaitre dans le calendrier principale de l'utilisateur.
+
 	\section{Conclusion}
 	\hspace{0.45cm}
+		
 
-	
-	
-	
-	
-	
 \end{document}
