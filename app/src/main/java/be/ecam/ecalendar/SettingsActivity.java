@@ -13,10 +13,8 @@ import android.support.v7.preference.PreferenceManager;
 import android.support.v7.preference.PreferenceScreen;
 import android.view.MenuItem;
 
-
 public class SettingsActivity extends AppCompatActivity {
 
-    private Preference pref; 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
