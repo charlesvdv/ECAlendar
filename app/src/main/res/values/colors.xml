@@ -3,7 +3,10 @@
     <color name="colorPrimary">	#9a141d</color>
     <color name="colorPrimaryDark">	#9a141d</color>
     <color name="colorAccent">	#9a141d</color>
-    <color name="colorTitle">   #00244c</color>
+    <color name="detailTitle">#000000</color>
+    <color name="colorTitle">#D3D3D3</color>
+    <color name="colorDay">#303030</color>
+    <color name="Black">#000000</color>
 
     <array name="titleColors">
         <item name="color1">#692e42</item>
