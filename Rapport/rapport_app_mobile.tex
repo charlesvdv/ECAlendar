@@ -1,66 +1,134 @@
 \documentclass{article}
 
-\usepackage[version=3]{mhchem} % Package for chemical equation typesetting
-\usepackage{siunitx} % Provides the \SI{}{} and \si{} command for typesetting SI units
 \usepackage{graphicx} % Required for the inclusion of images
-\usepackage{natbib} % Required to change bibliography style to APA
-\usepackage{amsmath} % Required for some math elements 
 \usepackage[utf8x]{inputenc}
 \usepackage{hyperref}
 
-\renewcommand{\labelenumi}{\alph{enumi}.} % Make numbering in the enumerate environment by letter rather than number (e.g. section 6)
-
-%\usepackage{times} % Uncomment to use the Times New Roman font
-
-%----------------------------------------------------------------------------------------
-%	DOCUMENT INFORMATION
-%----------------------------------------------------------------------------------------
-
-\title{AM4L: Applications Mobiles \\ Réalisation d'une application Android (ECAlendar) \\ ECAM Bruxelles} % Title
+\title{AM4L: Applications Mobiles \\ Réalisation d'une application Android \\ ECAlendar \\
+\vspace{1cm} \large{ECAM Bruxelles} \vspace{5cm}}
 
 \author{Charles \textsc{Vandevoorde} (13019)\\
 		Lorenzo \textsc{Riga} (13018)\\
 		Antoine \textsc{Vander Meiren} (12088)\\
 		Gaetano \textsc{Giordano} (12054)\\
-		Sylvain \textsc{Alonso} (12150)\\} % Author name
+		Sylvain \textsc{Alonso} (12150)\\}
 
-\date{\today} % Date for the report
+\date{\vspace{5cm}\today}
 
 \begin{document}
-	
-	\maketitle % Insert the title, author and date
-	
-	
-	\section*{Introduction}
-	\hspace{0.45cm}
-	Dans le cadre du cours d'applications mobiles, nous avons réalisé une application Android "ECAlendar" à l'aide d'Android Studio. Cette dernière utilise l'API de 'Ecam Calendar" afin de permettre aux étudiants de consulter leurs horaires directement sur leurs GSM.\\
-	
-	Dans ce rapport, nous allons présenter la manière dont nous nous sommes organisés en groupe mais aussi la structure de notre application ainsi qu'un listing de ses fonctionnalités. 
-	
+
+	\maketitle
+    \newpage
+
+
+	\section{Introduction}
+    Dans le cadre du cours d'applications mobiles, nous avons réalisé une application Android
+    "ECAlendar" à l'aide d'Android Studio. Cette dernière utilise l'API de "Ecam Calendar" afin de
+    permettre aux étudiants de consulter leurs horaires directement sur leurs GSM.\\
+
+    Dans ce rapport, nous allons présenter la manière dont nous nous sommes organisés en groupe mais
+    aussi la structure de notre application ainsi qu'un listing de ses fonctionnalités.
+
 	\section{Organisation du groupe}
 	\hspace{0.45cm}
-	 Nous avons hébergé notre projet sur Github de manière à faciliter le travail en groupe et nous sommes répartis les tâches comme suit lors de la première séance:
-	 \begin{itemize}
-	 	\item Charles:
-	 	\item Lorenzo:
-	 	\item Antoine:
-	 	\item Gaetano:
-	 	\item Sylvain: intégration de la base de données SQLite et gestion des clics (affichage des détails lorsque l'utilisateur appuie sur un élément).
-	 \end{itemize}
-	 
-	
-	\section{Présentation de l'architecture (diagramme de classes)}
-	\hspace{0.45cm}
-	
-	\section{Listing des fonctionnalités}
-	\hspace{0.45cm}
-	
-	\section{Conclusion}
-	\hspace{0.45cm}
+     Nous avons hébergé notre projet sur Github de manière à faciliter le travail en groupe et nous
+     sommes répartis les tâches comme suit lors de la première séance:
+	 \begin{description}
+         \item[Charles] chargement des données depuis l'API, DAO ainsi que gestion de la
+             \textit{RecyclerView}.
+         \item[Lorenzo] gestion du layout, style de l'application.
+         \item[Antoine]
+         \item[Gaetano]
+         \item[Sylvain] intégration de la base de données SQLite et gestion des clics (affichage des détails lorsque l'utilisateur appuie sur un élément).
+	 \end{description}
 
-	
-	
-	
-	
-	
+
+	\section{Présentation de l'architecture}
+        \begin{figure}
+            \centering
+            \includegraphics[scale=0.2]{img/uml.png}
+            \label{fig:uml}
+            \caption{Diagramme UML de classe représentant notre application}
+        \end{figure}
+
+        \subsection{Récupération des données depuis l'API REST}
+            Notre application pour fonctionner a besoin de données provenant de l'API REST du site
+            \url{calendar.ecam.be}. Après une analyse des requêtes faites par l'application web
+            Calendar, nous avions tous les outils en main pour démarrer l'implémentation de l'API
+            dans notre application.
+
+            Pour éviter de bloquer l'interface utilisateur pendant le chargement des données, nous
+            avons utilisé un \textit{IntentService}. Celui-ci est un service spécial d'Android qui
+            s'arrête dès que la tâche est finie. Nous avons choisi ce type de service à la place de
+            système comme les \textit{AsyncTaskLoader}, \ldots pour plusieurs raisons.
+            \begin{itemize}
+                \item Meilleur séparation des affaires puisqu'un \textit{IntentService} ne doit pas
+                    obligatoirement être appelé de l'activité principale.
+                \item API plus propre grâce à l'utilisatation d'\textit{Intent}.
+            \end{itemize}
+
+            Notre service peut être appelé pour récuperer deux types de données: la liste des
+            calendriers disponibles (profs, locals, séries, \ldots) et un calendrier. Pour chaque
+            type, nous envoyons la requête via un \textit{Intent} contenant les données nécessaires
+            à la récupération des données.
+
+            Les requêtes HTTP sont faites synchrone à l'aide de \textit{future} puisqu'Android ne
+            supporte pas le multi-threading imbriqué. Pour ce faire, nous avons utilisé la librairie
+            \textit{Volley} qui est une nouvelle libraire permettant de faciliter les requêtes HTTP.
+
+            L'utilisation des \textit{futures} vient du fait que \textit{Volley} est asynchrone de
+            base.
+
+            Le parsing des données ICS (format de donnée de calendrier) est effectué par une
+            libraire appelée \textit{iCal4j}. Le parsing est effectué dans l'\textit{IntentService}
+            pour éviter des ralentissements inutiles de l'interface utilisateur.
+
+            Finalement, les données sont renvoyés via un \textit{Broadcast} jusqu'à un récepteur
+            spécialement écrit pour ce service. Nous détaillerons plus en détail ce récepteur dans
+            la section \ref{sec:dao}.
+
+        \label{sec:dao}
+        \subsection{Le DAO}
+            DAO signifie \textit{Data Access Object}. Cette classe permet d'être le seul point
+            d'accès aux données et décide de quel source les données seront tirées. Dans notre cas,
+            les sources sont la base de donnée et l'API REST du site \url{calendar.ecam.be}.
+
+            La sélection de la source est assez trivial, nous regardons d'abord si les données sont
+            en base de données et si elles sont assez nouvelles (moins de 1 semaines) aussi non,
+            nous allons utilisés notre \textit{IntentService} pour charger nos données et les sauver
+            dans la base de donnée.
+
+            Mise à part la création, le DAO est responsable de la sauvegarde et de la reprise de
+            données en base de données.
+
+            Le DAO devant gérer l'asynchronisme de l'\textit{IntentService}, nous avons utilisés un
+            système de "notifieurs" qui demande d'être notifié dès qu'une donnée est arrivée. Le DAO
+            garde donc une liste de classe implémentant une certaine interface.
+
+            Une autre caractéristique du DAO est que celui-ci est implémenté comme un singleton
+            parce que nous devions avoir le contexte d'une activité pour sauvegardé les données en
+            base de données. Lorsque le \textit{CalendarLoaderReceiver} (le récepteur de
+            l'\textit{IntentService}) reçoit les données, nous devons accèder au DAO mais le
+            récepteur n'a pas de contexte. Il faut donc avoir un context statique (mauvaise pratique
+            en général) ou alors implémenter le DAO entant que singleton. Cette décision nous a
+            permis également d'être beaucoup plus fexible quand au chargement des données.
+
+        \subsection{Le \textit{RecyclerView}}
+            Le \textit{RecyclerView} nous permet d'afficher une grande liste de calendriers sans
+            problème de performances. Dans notre cas, nous avons créer une \textit{RecyclerView}
+            avec deux types de données. Nous pouvions soit avoir un slot horaire, soit avoir une
+            information sur la date des slots horaires suivant.
+
+            Dans notre \textit{ItemAdapter} qui gère la création à la volée des informations
+            affichées, nous avons donc deux différents \textit{ViewHolder}.
+
+            La \textit{RecyclerView} ne supportant qu'une seule liste de donnée, nous avons créer
+            une liste d'\textit{Object}. Cette approche pourrait être changé dans le futur si nous
+            rajoutons plusieurs types de vues différentes. Dans notre cas, cette solution est la
+            plus facile et la plus rapide à implémenter.
+
+	\section{Listing des fonctionnalités}
+
+	\section{Conclusion}
+
 \end{document}
