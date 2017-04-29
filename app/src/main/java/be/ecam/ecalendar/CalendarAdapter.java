@@ -120,8 +120,6 @@ public class CalendarAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 }
             }
         });
-        notifyDataSetChanged();
-
         sortedSchedules.clear();
 
         SimpleDateFormat dt = new SimpleDateFormat("dd MMM", Locale.FRANCE);
@@ -133,6 +131,14 @@ public class CalendarAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             sortedSchedules.add(sched);
             lastDate = sched.getStartTime();
         }
+
+        notifyDataSetChanged();
+    }
+
+    public void clearCalendar() {
+        calendars.clear();
+        sortedSchedules.clear();
+        colorMap.clear();
     }
 
     public int getCalendarPosition() {
@@ -181,13 +187,11 @@ public class CalendarAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             Schedule schedule = (Schedule) item;
 
             itemViewHolder.titleTextView.setText(schedule.getActivityName());
-            Log.d(TAG, schedule.getCalendar());
             itemViewHolder.titleLayout.setBackgroundColor(colorMap.get(schedule.getCalendar()));
           
             SimpleDateFormat dt = new SimpleDateFormat("hh:mm");
             itemViewHolder.timeTextView.setText(dt.format(schedule.getStartTime()) + " / " +
                 dt.format(schedule.getEndTime()));
-          
             itemViewHolder.groupTextView.setText(schedule.getGroup());
         } else if (holder instanceof DateViewHolder) {
             DateViewHolder dateViewHolder = (DateViewHolder) holder;

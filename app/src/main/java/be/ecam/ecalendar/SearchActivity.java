@@ -108,7 +108,6 @@ public class SearchActivity extends AppCompatActivity implements CalendarDAO.Cal
                         Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("id", calendarId);
-
                 editor.commit();
 
                 dao.getCalendar(calendarId);

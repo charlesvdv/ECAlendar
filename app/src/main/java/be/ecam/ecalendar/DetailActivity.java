@@ -8,6 +8,9 @@ import android.content.Intent;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+
 public class DetailActivity extends AppCompatActivity {
 
     @Override
@@ -29,9 +32,10 @@ public class DetailActivity extends AppCompatActivity {
         TextView teacherTextView = (TextView) this.findViewById(R.id.teacher);
         TextView groupTextView = (TextView) this.findViewById(R.id.group);
 
-
         titleTextView.setText(schedule.getActivityName());
-        timeTextView.setText(schedule.getStartTime().toString() + " - " + schedule.getEndTime().toString());
+        SimpleDateFormat dt = new SimpleDateFormat("hh:mm dd/mmm/yy", Locale.FRANCE);
+        timeTextView.setText(dt.format(schedule.getStartTime()) + " - " +
+                dt.format(schedule.getEndTime()));
         classroomTextView.setText(schedule.getClassRoom());
         teacherTextView.setText(schedule.getTeacher());
         groupTextView.setText(schedule.getGroup());

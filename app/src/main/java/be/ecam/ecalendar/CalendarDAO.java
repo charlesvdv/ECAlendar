@@ -202,6 +202,10 @@ public class CalendarDAO {
         }
 
         saveLastQueryTime(LAST_SAVED_TYPES_ID);
+
+        for (CalendarDataUpdated not : notifiers) {
+            not.notifyCalendarTypesChanges(types);
+        }
     }
 
     private ArrayList<CalendarType> removeDuplicate(ArrayList<CalendarType> types) {
@@ -244,5 +248,9 @@ public class CalendarDAO {
         }
 
         saveLastQueryTime(LAST_SAVED_CALENDAR_ID + name);
+
+        for (CalendarDataUpdated not : notifiers) {
+            not.notifySchedulesChange(name, schedules);
+        }
     }
 }

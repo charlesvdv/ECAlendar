@@ -174,7 +174,7 @@ public class CalendarLoader extends IntentService {
         if (descriptionValue.length == 4) {
             teacher = descriptionValue[3];
         }
-
+        Log.d(TAG, classRoom+ " " + group);
         return new Schedule(id, calendarName, startDate, endDate, name, group, teacher, classRoom);
     }
 
