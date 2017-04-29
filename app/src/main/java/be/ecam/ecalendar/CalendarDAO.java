@@ -241,7 +241,7 @@ public class CalendarDAO {
             values.put(ScheduleEntry.SCHEDULE_START_TIME, sched.getStartTime().getTime());
             values.put(ScheduleEntry.SCHEDULE_END_TIME, sched.getStartTime().getTime());
             values.put(ScheduleEntry.SCHEDULE_GROUP, sched.getGroup());
-            values.put(ScheduleEntry.SCHEDULE_CLASS_ROOM, sched.getGroup());
+            values.put(ScheduleEntry.SCHEDULE_CLASS_ROOM, sched.getClassRoom());
             values.put(ScheduleEntry.SCHEDULE_TEACHER, sched.getTeacher());
 
             db.insert(ScheduleEntry.TABLE_NAME, null, values);
