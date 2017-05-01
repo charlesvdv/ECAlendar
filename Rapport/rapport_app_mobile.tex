@@ -1,7 +1,7 @@
 \documentclass{article}
 
 \usepackage{graphicx} % Required for the inclusion of images
-\usepackage[utf8x]{inputenc}
+\usepackage[utf8]{inputenc}
 \usepackage{hyperref}
 
 \title{AM4L: Applications Mobiles \\ Réalisation d'une application Android \\ ECAlendar \\
@@ -38,7 +38,7 @@
              \textit{RecyclerView}.
          \item[Lorenzo] gestion du layout, style de l'application.
          \item[Antoine]
-         \item[Gaetano]
+         \item[Gaetano] gestion du layout et style de l'application
          \item[Sylvain] intégration de la base de données SQLite et gestion des clics (affichage des détails lorsque l'utilisateur appuie sur un élément).
 	 \end{description}
 
@@ -128,6 +128,44 @@
             plus facile et la plus rapide à implémenter.
 
 	\section{Listing des fonctionnalités}
+
+	\subsection{Icon}
+	 Que serait une application mobile, sans une icon appropri\'ee. C'est pour cela que nous avons cr\'ee une icon ECAlendar specialement customis\'ee pour notre application.
+	   \begin{center}
+            \includegraphics[scale=0.4]{img/ICON.png}
+            \end{center}
+
+
+
+	 \subsection{La page d'accueil}
+	 Comme vous pouvez le voir sur l'image, en entrant dans l'application ECAlendar nous avons une page qui nous indique les cours pour l'ann\'ee s\'electionn\'ee. Autrement dit elle indique la date ainsi que les cours donn\'es. Elle indique \'egalement l'heure du debut et l'heure de fin du cours.
+	   \begin{center}
+            \includegraphics[scale=0.4]{img/Page_accueil.png}
+            \end{center}
+
+
+	 \subsection{D\'etail d'un cours}
+	 En cliquant sur l'un des cours on entre dans une nouvelle page qui nous permet d'afficher les d\'etails concernant ce cours. C'est a dire le local, l'enseignant et la s\'erie.
+
+            \begin{center}
+            \includegraphics[scale=0.4]{img/Section.png}
+            \end{center}
+
+            \subsection{Choix de l'ann\'ee}
+	Bien evidement, notre application nous permet de choisir \'egalement l'ann\'ee d'\'etude pour lequel nous aimerions voir l'horaire. C 'est pour cela que sur la page d'accueil en  cliquant sur les 3 points  en haute \`a droite, cela nous redirigera vers une page qui nous permettra de cocher une ann\'ee et ainsi la mettre dans nos pr\'eferences.
+
+            \begin{center}
+            \includegraphics[scale=0.4]{img/Annee.png}
+            \end{center}
+
+	\subsection{Recherche}
+	Nous pouvons \'egalement choisir l'ann\'ee sur la page d'accueil, en cliquant simplement sur la petite loupe situ\'ee en haut. Cela nous redirigera vers la page ci-dessous.
+            \begin{center}
+            \includegraphics[scale=0.4]{img/search.png}
+            \end{center}
+
+          \subsection{Remarques}
+          Comme vous pouvez le voir sur certaines images, certains bugs intervient comme par exemple l'heure de fin du cours. Nous tenons a pr\'eciser que ces bugs ont \'et\'e corrig\'es et fonctionnent d\'esormais parfaitement.
 
 	\section{Conclusion}
 
