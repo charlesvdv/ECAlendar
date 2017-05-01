@@ -23,14 +23,13 @@
 
 	\section{Introduction}
     Dans le cadre du cours d'applications mobiles, nous avons réalisé une application Android
-    "ECAlendar" à l'aide d'Android Studio. Cette dernière utilise l'API de "Ecam Calendar" afin de
-    permettre aux étudiants de consulter leurs horaires directement sur leurs GSM.\\
+    "ECAlendar" à l'aide d'Android Studio. Cette dernière utilise l'API de \url{calendar.ecam.be} afin de
+    permettre aux étudiants de consulter leurs horaires directement sur leurs smartphones.\\
 
     Dans ce rapport, nous allons présenter la manière dont nous nous sommes organisés en groupe mais
     aussi la structure de notre application ainsi qu'un listing de ses fonctionnalités.
 
 	\section{Organisation du groupe}
-	\hspace{0.45cm}
      Nous avons hébergé notre projet sur Github de manière à faciliter le travail en groupe et nous
      sommes répartis les tâches comme suit lors de la première séance:
 	 \begin{description}
@@ -39,7 +38,7 @@
          \item[Lorenzo] gestion du layout, style de l'application.
          \item[Antoine] gestion des préférences, analyse est création des modèles requis et gestion de recherche de calendrier
          \item[Gaetano] gestion du layout et style de l'application.
-         \item[Sylvain] intégration de la base de données SQLite et gestion des clics (affichage des détails lorsque l'utilisateur appuie sur un élément).
+         \item[Sylvain] création de la base de données locale SQLite et gestion des clics (affichage des détails lorsque l'utilisateur appuie sur un élément).
 	 \end{description}
 
 
@@ -56,33 +55,33 @@
         l'API proposé par \textit{ECAM Calendar}
 		afin de réaliser un modèle des données que nous allons devoir stocker. Nous avons décidé de créer deux modèles différents:
         \textit{Schedule} et \textit{CalendarType}. \
-        \textit{Schedule} stocke toutes les informations relative à un calendrier en particulier: local, date et heure,
+        \textit{Schedule} stocke toutes les informations relatives à un calendrier en particulier: local, date et heure,
 		professeur, note, nom de l'activité, personne concernée par groupe, \ldots \
-        \textit{CalendarType} quant à lui permet de sauver les différents calendrier disponible via un ID et une description du l'année/section,
+        \textit{CalendarType} quant à lui permet de sauver les différents calendriers disponibles via un ID et une description de l'année/section,
 		du professeur ou du local. \
 
 		Tout au long de l'application nous utiliserons ces modèles pour créer des objets utilisables par chacune des parties.
 
 	\subsection{Gestion des préférences}
     Pour ce qui est des préférences, nous avons simplement effectué une \textit{PreferenceActivity}, accessible via le menu Android de l'application,
-		et composée d'un fragment de préférence affichant une liste d'horaire disponible
+		et composée d'un fragment de préférence affichant une liste d'horaires disponibles
 		qui permet à l'étudiant de sélectionner son horaire personnel, en l'occurrence l'année dans laquelle il se trouve et sa série. \
 		Au premier lancement de l'application, l'activité principale n'affichera pas de calendrier et nous demandera de nous rendre dans
 		l'onglet préférence afin de sélectionner l'année désirée. \
 		A partir de ce menu, nous avons développé une "Up Navigation" qui permet de retourner directement à la l'activité principale montrant
-		le calendrier sélectionne. Notons que nous pouvons également utilisé le bouton back
+		le calendrier sélectionné. Notons que nous pouvons également utiliser le bouton back
         nativement présent sur les smartphones Android.
 
 	\subsection{Recherche d'un second calendier}
-		L'application permet à l'utilisateur de sélectionner deux calendrier à la fois: le sien
-        comme principale via les préférences et
-		un second pour pouvoir comparer deux calendrier par exemple.  \
+		L'application permet à l'utilisateur de sélectionner deux calendriers à la fois: le sien
+        comme principal via les préférences et
+		un second pour pouvoir comparer deux calendriers par exemple.  \
         Pour en sélectionner un second, nous avons ajouté une petite loupe dans le menu Android de l'application qui nous amène à une autre
         activité nommée \textit{SearchActivity}. Cette activité nous montre une liste, scrollable,
-        de tous les calendriers disponible via l'API calendrier de l'ECAM.
+        de tous les calendriers disponibles via l'API calendrier de l'ECAM.
 		En cliquant une seconde fois sur cette loupe nous faisons apparaitre un clavier qui permet de rentrer du texte afin de rechercher
 		un calendrier particulier. \
-		La recherche permettra à l'utilisateur de visualiser au fur et à mesure qu'il tape, les calendriers disponible en fonction du
+		La recherche permettra à l'utilisateur de visualiser au fur et à mesure qu'il tape, les calendriers disponibles en fonction du
 		texte qu'il complète afin de simplifier la sélection désirée. \\
 		L'utilisateur pourra ensuite cliquer  sur le calendrier de son choix, il recevra une
         confirmation de ce choix via un message \textit{Toast},
@@ -107,10 +106,10 @@
             \begin{itemize}
                 \item Meilleur séparation des affaires puisqu'un \textit{IntentService} ne doit pas
                     obligatoirement être appelé de l'activité principale.
-                \item API plus propre grâce à l'utilisatation d'\textit{Intent}.
+                \item API plus propre grâce à l'utilisation d'\textit{Intent}.
             \end{itemize}
 
-            Notre service peut être appelé pour récuperer deux types de données: la liste des
+            Notre service peut être appelé pour récupérer deux types de données: la liste des
             calendriers disponibles (profs, locals, séries, \ldots) et un calendrier. Pour chaque
             type, nous envoyons la requête via un \textit{Intent} contenant les données nécessaires
             à la récupération des données.
@@ -126,7 +125,7 @@
             libraire appelée \textit{iCal4j}. Le parsing est effectué dans l'\textit{IntentService}
             pour éviter des ralentissements inutiles de l'interface utilisateur.
 
-            Finalement, les données sont renvoyés via un \textit{Broadcast} jusqu'à un récepteur
+            Finalement, les données sont renvoyées via un \textit{Broadcast} jusqu'à un récepteur
             spécialement écrit pour ce service. Nous détaillerons plus en détail ce récepteur dans
             la section \ref{sec:dao}.
 
@@ -134,12 +133,12 @@
         \subsection{Le DAO}
             DAO signifie \textit{Data Access Object}. Cette classe permet d'être le seul point
             d'accès aux données et décide de quel source les données seront tirées. Dans notre cas,
-            les sources sont la base de donnée et l'API REST du site \url{calendar.ecam.be}.
+            les sources sont la base de données et l'API REST du site \url{calendar.ecam.be}.
 
-            La sélection de la source est assez trivial, nous regardons d'abord si les données sont
+            La sélection de la source est assez triviale, nous regardons d'abord si les données sont
             en base de données et si elles sont assez nouvelles (moins de 1 semaines) aussi non,
-            nous allons utilisés notre \textit{IntentService} pour charger nos données et les sauver
-            dans la base de donnée.
+            nous allons utiliser notre \textit{IntentService} pour charger nos données et les sauver
+            dans la base de données.
 
             Mise à part la création, le DAO est responsable de la sauvegarde et de la reprise de
             données en base de données.
@@ -149,7 +148,7 @@
             garde donc une liste de classe implémentant une certaine interface.
 
             Une autre caractéristique du DAO est que celui-ci est implémenté comme un singleton
-            parce que nous devions avoir le contexte d'une activité pour sauvegardé les données en
+            parce que nous devions avoir le contexte d'une activité pour sauvegarder les données en
             base de données. Lorsque le \textit{CalendarLoaderReceiver} (le récepteur de
             l'\textit{IntentService}) reçoit les données, nous devons accéder au DAO mais le
             récepteur n'a pas de contexte. Il faut donc avoir un contexte statique (mauvaise pratique
@@ -158,18 +157,32 @@
 
         \subsection{Le \textit{RecyclerView}}
             Le \textit{RecyclerView} nous permet d'afficher une grande liste de calendriers sans
-            problème de performances. Dans notre cas, nous avons créer une \textit{RecyclerView}
+            problème de performances. Dans notre cas, nous avons créé une \textit{RecyclerView}
             avec deux types de données. Nous pouvions soit avoir un slot horaire, soit avoir une
             information sur la date des slots horaires suivant.
 
             Dans notre \textit{ItemAdapter} qui gère la création à la volée des informations
             affichées, nous avons donc deux différents \textit{ViewHolder}.
 
-            La \textit{RecyclerView} ne supportant qu'une seule liste de donnée, nous avons créer
-            une liste d'\textit{Object}. Cette approche pourrait être changé dans le futur si nous
+            La \textit{RecyclerView} ne supportant qu'une seule liste de données, nous avons créé
+            une liste d'\textit{Object}. Cette approche pourrait être changée dans le futur si nous
             rajoutons plusieurs types de vues différentes. Dans notre cas, cette solution est la
             plus facile et la plus rapide à implémenter.
-
+	
+	\section{Base de données}
+	Notre base de données locale contient deux tables:
+	\begin{itemize}
+		\item Une table \textit{schedule} qui contient toutes les informations relatives à un calendrier en particulier (local, professeur, date et heure,...)
+		\item Une table \textit{$calendar\_type$} qui nous permet de sauver les différents calendriers disponibles via un ID et une description (groupe, local, professeur,...)
+		
+	\end{itemize}
+	\begin{figure}[!h]
+		\centering
+		\includegraphics[scale=0.9]{img/uml_db.jpg}
+		\caption{Diagramme UML de classes représentant la base de données}
+	\end{figure}
+	Une telle structure nous a permis de pouvoir proposer facilement une liste des calendriers disponibles améliorant ainsi la recherche des utilisateurs. 
+		
 	\section{Listing des fonctionnalités}
     \begin{itemize}
         \item Affichage de calendrier reprenant son horaire personnel
