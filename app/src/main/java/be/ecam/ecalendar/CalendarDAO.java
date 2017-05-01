@@ -239,7 +239,7 @@ public class CalendarDAO {
             values.put(ScheduleEntry.SCHEDULE_CALENDAR, name);
             values.put(ScheduleEntry.SCHEDULE_ACTIVITY_NAME, sched.getActivityName());
             values.put(ScheduleEntry.SCHEDULE_START_TIME, sched.getStartTime().getTime());
-            values.put(ScheduleEntry.SCHEDULE_END_TIME, sched.getStartTime().getTime());
+            values.put(ScheduleEntry.SCHEDULE_END_TIME, sched.getEndTime().getTime());
             values.put(ScheduleEntry.SCHEDULE_GROUP, sched.getGroup());
             values.put(ScheduleEntry.SCHEDULE_CLASS_ROOM, sched.getClassRoom());
             values.put(ScheduleEntry.SCHEDULE_TEACHER, sched.getTeacher());
