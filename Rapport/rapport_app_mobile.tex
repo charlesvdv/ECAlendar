@@ -37,8 +37,8 @@
          \item[Charles] chargement des données depuis l'API, DAO ainsi que gestion de la
              \textit{RecyclerView}.
          \item[Lorenzo] gestion du layout, style de l'application.
-         \item[Antoine]
-         \item[Gaetano] gestion du layout et style de l'application
+         \item[Antoine] gestion des préférences, analyse est création des modèles requis et gestion de recherche de calendrier
+         \item[Gaetano] gestion du layout et style de l'application.
          \item[Sylvain] intégration de la base de données SQLite et gestion des clics (affichage des détails lorsque l'utilisateur appuie sur un élément).
 	 \end{description}
 
@@ -50,6 +50,49 @@
             \label{fig:uml}
             \caption{Diagramme UML de classe représentant notre application}
         \end{figure}
+
+	\subsection{Création des modèles}
+		Avant de commencer à développer l'application, nous avons du analyser ce qui est renvoyé par
+        l'API proposé par \textit{ECAM Calendar}
+		afin de réaliser un modèle des données que nous allons devoir stocker. Nous avons décidé de créer deux modèles différents:
+        \textit{Schedule} et \textit{CalendarType}. \
+        \textit{Schedule} stocke toutes les informations relative à un calendrier en particuler: local, date et heure,
+		professeur, note, nom de l'activité, personne concernée par groupe, \ldots \
+        \textit{CalendarType} quant à lui permet de sauver les différents calendrier disponible via un ID et une description du l'année/section,
+		du professeur ou du local. \
+
+		Tout au long de l'application nous utiliserons ces modèles pour créer des objets utilisables par chacune des parties.
+
+	\subsection{Gestion des préférences}
+    Pour ce qui est des préférences, nous avons simplement effectué une \textit{PreferenceActivity}, accesible via le menu Android de l'application,
+		et composée d'un fragment de préférence affichant une liste d'horaire disponible
+		qui permet à l'étudiant de séléctionner son horaire personnel, en l'occurence l'année dans laquelle il se trouve et sa série. \
+		Au premier lancement de l'application, l'activité principale n'affichera pas de calendrier et nous demandera de nous rendre dans
+		l'onglet préférence afin de séléctionner l'année désirée. \
+		A partir de ce menu, nous avons développé une "Up Navigation" qui permet de retrouner directement à la l'activité principale montrant
+		le calendrier séléctionné. Notons que nous pouvons également utilisé le boutton back
+        nativement présent sur les smartphones Android.
+
+	\subsection{Recherche d'un second calendier}
+		L'application permet à l'utilisateur de séléctionner deux calendrier à la fois: le sien
+        comme principale via les préférences et
+		un second pour pouvoir comparer deux calendrier par exemple.  \
+        Pour en séléctionner un second, nous avons ajouté une petite loupe dans le menu Android de l'application qui nous amène à une autre
+        activité nommée \textit{SearchActivity}. Cette activité nous montre une liste, scrollable,
+        de tous les calendriers disponible via l'API calendrier de l'ECAM.
+		En cliquant une seconde fois sur cette loupe nous faisons apparaitre un clavier qui permet de rentrer du texte afin de rechercher
+		un calendrier particulier. \
+		La recherche permettra à l'utilisateur de visualiser au fûr et à mesure qu'il tape, les calendriers disponible en fonction du
+		texte qu'il complète afin de simplifier la séléction désirée. \\
+		L'utilisateur pourra ensuite cliquer  sur le calendrier de son choix, il recevra une
+        confirmation de ce choix via un message \textit{Toast},
+		et pourra retourner à l'activité principale via la "Up Navigation" ou encore le boutton back natif android. La valeur du calendrier
+        sera alors stockée dans un \textit{SharedPreference} disponible pour le reste de l'applicaiton.
+		Une fois sur l'acivité principale, le second calendrier sera disponible pour l'utilisateur. \
+		A chaque redémarage de l'applicaiton ou changement de la section dans les préférences de
+        l'application (\textit{onDestroy} de la \textit{MainActivity}),
+        cette \textit{SharedPreference} sera remise à zéro pour ne plus apparaitre dans le calendrier principale de l'utilisateur.
+
 
         \subsection{Récupération des données depuis l'API REST}
             Notre application pour fonctionner a besoin de données provenant de l'API REST du site
@@ -128,12 +171,17 @@
             plus facile et la plus rapide à implémenter.
 
 	\section{Listing des fonctionnalités}
+    \begin{itemize}
+        \item Affichage de calendrier reprennant son horaire personnel
+        \item Recherche parmis les calendrier disponible via l'API de l'ECAM
+        \item Affichage simultané d'un second calendrier au choix pour comparer des horaires (local, professeur et étudiant)
+    \end{itemize}
 
-	\subsection{Icon}
+	\subsection{Icone}
 	 Que serait une application mobile, sans une icon appropri\'ee. C'est pour cela que nous avons cr\'ee une icon ECAlendar specialement customis\'ee pour notre application.
 	   \begin{center}
             \includegraphics[scale=0.4]{img/ICON.png}
-            \end{center}
+        \end{center}
 
 
 
@@ -141,32 +189,30 @@
 	 Comme vous pouvez le voir sur l'image, en entrant dans l'application ECAlendar nous avons une page qui nous indique les cours pour l'ann\'ee s\'electionn\'ee. Autrement dit elle indique la date ainsi que les cours donn\'es. Elle indique \'egalement l'heure du debut et l'heure de fin du cours.
 	   \begin{center}
             \includegraphics[scale=0.4]{img/Page_Accueil.png}
-            \end{center}
+        \end{center}
 
 
 	 \subsection{D\'etail d'un cours}
 	 En cliquant sur l'un des cours on entre dans une nouvelle page qui nous permet d'afficher les d\'etails concernant ce cours. C'est a dire le local, l'enseignant et la s\'erie.
-
-            \begin{center}
+        \begin{center}
             \includegraphics[scale=0.4]{img/Section.png}
-            \end{center}
+        \end{center}
 
             \subsection{Choix de l'ann\'ee}
 	Bien evidement, notre application nous permet de choisir \'egalement l'ann\'ee d'\'etude pour lequel nous aimerions voir l'horaire. C 'est pour cela que sur la page d'accueil en  cliquant sur les 3 points  en haute \`a droite, cela nous redirigera vers une page qui nous permettra de cocher une ann\'ee et ainsi la mettre dans nos pr\'eferences.
-
-            \begin{center}
+        \begin{center}
             \includegraphics[scale=0.4]{img/Annee.png}
-            \end{center}
+        \end{center}
 
 	\subsection{Recherche}
 	Nous pouvons \'egalement choisir l'ann\'ee sur la page d'accueil, en cliquant simplement sur la petite loupe situ\'ee en haut. Cela nous redirigera vers la page ci-dessous.
-            \begin{center}
+        \begin{center}
             \includegraphics[scale=0.4]{img/search.png}
-            \end{center}
+        \end{center}
 
           \subsection{Remarques}
           Comme vous pouvez le voir sur certaines images, certains bugs intervient comme par exemple l'heure de fin du cours. Nous tenons a pr\'eciser que ces bugs ont \'et\'e corrig\'es et fonctionnent d\'esormais parfaitement.
 
-	\section{Conclusion}
+    \section{Conclusion}
 
 \end{document}
