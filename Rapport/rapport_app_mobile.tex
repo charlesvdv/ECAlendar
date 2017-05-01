@@ -56,7 +56,7 @@
         l'API proposé par \textit{ECAM Calendar}
 		afin de réaliser un modèle des données que nous allons devoir stocker. Nous avons décidé de créer deux modèles différents:
         \textit{Schedule} et \textit{CalendarType}. \
-        \textit{Schedule} stocke toutes les informations relative à un calendrier en particuler: local, date et heure,
+        \textit{Schedule} stocke toutes les informations relative à un calendrier en particulier: local, date et heure,
 		professeur, note, nom de l'activité, personne concernée par groupe, \ldots \
         \textit{CalendarType} quant à lui permet de sauver les différents calendrier disponible via un ID et une description du l'année/section,
 		du professeur ou du local. \
@@ -64,32 +64,32 @@
 		Tout au long de l'application nous utiliserons ces modèles pour créer des objets utilisables par chacune des parties.
 
 	\subsection{Gestion des préférences}
-    Pour ce qui est des préférences, nous avons simplement effectué une \textit{PreferenceActivity}, accesible via le menu Android de l'application,
+    Pour ce qui est des préférences, nous avons simplement effectué une \textit{PreferenceActivity}, accessible via le menu Android de l'application,
 		et composée d'un fragment de préférence affichant une liste d'horaire disponible
-		qui permet à l'étudiant de séléctionner son horaire personnel, en l'occurence l'année dans laquelle il se trouve et sa série. \
+		qui permet à l'étudiant de sélectionner son horaire personnel, en l'occurrence l'année dans laquelle il se trouve et sa série. \
 		Au premier lancement de l'application, l'activité principale n'affichera pas de calendrier et nous demandera de nous rendre dans
-		l'onglet préférence afin de séléctionner l'année désirée. \
-		A partir de ce menu, nous avons développé une "Up Navigation" qui permet de retrouner directement à la l'activité principale montrant
-		le calendrier séléctionné. Notons que nous pouvons également utilisé le boutton back
+		l'onglet préférence afin de sélectionner l'année désirée. \
+		A partir de ce menu, nous avons développé une "Up Navigation" qui permet de retourner directement à la l'activité principale montrant
+		le calendrier sélectionne. Notons que nous pouvons également utilisé le bouton back
         nativement présent sur les smartphones Android.
 
 	\subsection{Recherche d'un second calendier}
-		L'application permet à l'utilisateur de séléctionner deux calendrier à la fois: le sien
+		L'application permet à l'utilisateur de sélectionner deux calendrier à la fois: le sien
         comme principale via les préférences et
 		un second pour pouvoir comparer deux calendrier par exemple.  \
-        Pour en séléctionner un second, nous avons ajouté une petite loupe dans le menu Android de l'application qui nous amène à une autre
+        Pour en sélectionner un second, nous avons ajouté une petite loupe dans le menu Android de l'application qui nous amène à une autre
         activité nommée \textit{SearchActivity}. Cette activité nous montre une liste, scrollable,
         de tous les calendriers disponible via l'API calendrier de l'ECAM.
 		En cliquant une seconde fois sur cette loupe nous faisons apparaitre un clavier qui permet de rentrer du texte afin de rechercher
 		un calendrier particulier. \
-		La recherche permettra à l'utilisateur de visualiser au fûr et à mesure qu'il tape, les calendriers disponible en fonction du
-		texte qu'il complète afin de simplifier la séléction désirée. \\
+		La recherche permettra à l'utilisateur de visualiser au fur et à mesure qu'il tape, les calendriers disponible en fonction du
+		texte qu'il complète afin de simplifier la sélection désirée. \\
 		L'utilisateur pourra ensuite cliquer  sur le calendrier de son choix, il recevra une
         confirmation de ce choix via un message \textit{Toast},
-		et pourra retourner à l'activité principale via la "Up Navigation" ou encore le boutton back natif android. La valeur du calendrier
-        sera alors stockée dans un \textit{SharedPreference} disponible pour le reste de l'applicaiton.
-		Une fois sur l'acivité principale, le second calendrier sera disponible pour l'utilisateur. \
-		A chaque redémarage de l'applicaiton ou changement de la section dans les préférences de
+		et pourra retourner à l'activité principale via la "Up Navigation" ou encore le bouton back natif android. La valeur du calendrier
+        sera alors stockée dans un \textit{SharedPreference} disponible pour le reste de l'application.
+		Une fois sur l'activité principale, le second calendrier sera disponible pour l'utilisateur. \
+		A chaque redémarrage de l'application ou changement de la section dans les préférences de
         l'application (\textit{onDestroy} de la \textit{MainActivity}),
         cette \textit{SharedPreference} sera remise à zéro pour ne plus apparaitre dans le calendrier principale de l'utilisateur.
 
@@ -151,10 +151,10 @@
             Une autre caractéristique du DAO est que celui-ci est implémenté comme un singleton
             parce que nous devions avoir le contexte d'une activité pour sauvegardé les données en
             base de données. Lorsque le \textit{CalendarLoaderReceiver} (le récepteur de
-            l'\textit{IntentService}) reçoit les données, nous devons accèder au DAO mais le
-            récepteur n'a pas de contexte. Il faut donc avoir un context statique (mauvaise pratique
+            l'\textit{IntentService}) reçoit les données, nous devons accéder au DAO mais le
+            récepteur n'a pas de contexte. Il faut donc avoir un contexte statique (mauvaise pratique
             en général) ou alors implémenter le DAO entant que singleton. Cette décision nous a
-            permis également d'être beaucoup plus fexible quand au chargement des données.
+            permis également d'être beaucoup plus flexible quand au chargement des données.
 
         \subsection{Le \textit{RecyclerView}}
             Le \textit{RecyclerView} nous permet d'afficher une grande liste de calendriers sans
@@ -172,13 +172,13 @@
 
 	\section{Listing des fonctionnalités}
     \begin{itemize}
-        \item Affichage de calendrier reprennant son horaire personnel
-        \item Recherche parmis les calendrier disponible via l'API de l'ECAM
+        \item Affichage de calendrier reprenant son horaire personnel
+        \item Recherche parmi les calendrier disponible via l'API de l'ECAM
         \item Affichage simultané d'un second calendrier au choix pour comparer des horaires (local, professeur et étudiant)
     \end{itemize}
 
-	\subsection{Icone}
-	 Que serait une application mobile, sans une icon appropri\'ee. C'est pour cela que nous avons cr\'ee une icon ECAlendar specialement customis\'ee pour notre application.
+	\subsection{Icône}
+	 Que serait une application mobile, sans une icône appropri\'ee. C'est pour cela que nous avons cr\'ee une icône ECAlendar spécialement customis\'ee pour notre application.
 	   \begin{center}
             \includegraphics[scale=0.4]{img/ICON.png}
         \end{center}
@@ -186,7 +186,7 @@
 
 
 	 \subsection{La page d'accueil}
-	 Comme vous pouvez le voir sur l'image, en entrant dans l'application ECAlendar nous avons une page qui nous indique les cours pour l'ann\'ee s\'electionn\'ee. Autrement dit elle indique la date ainsi que les cours donn\'es. Elle indique \'egalement l'heure du debut et l'heure de fin du cours.
+	 Comme vous pouvez le voir sur l'image, en entrant dans l'application ECAlendar nous avons une page qui nous indique les cours pour l'ann\'ee s\'electionn\'ee. Autrement dit elle indique la date ainsi que les cours donn\'es. Elle indique \'egalement l'heure du début et l'heure de fin du cours.
 	   \begin{center}
             \includegraphics[scale=0.4]{img/Page_Accueil.png}
         \end{center}
@@ -199,7 +199,7 @@
         \end{center}
 
             \subsection{Choix de l'ann\'ee}
-	Bien evidement, notre application nous permet de choisir \'egalement l'ann\'ee d'\'etude pour lequel nous aimerions voir l'horaire. C 'est pour cela que sur la page d'accueil en  cliquant sur les 3 points  en haute \`a droite, cela nous redirigera vers une page qui nous permettra de cocher une ann\'ee et ainsi la mettre dans nos pr\'eferences.
+	Bien évidement, notre application nous permet de choisir \'egalement l'ann\'ee d'\'etude pour lequel nous aimerions voir l'horaire. C 'est pour cela que sur la page d'accueil en  cliquant sur les 3 points  en haute \`a droite, cela nous redirigera vers une page qui nous permettra de cocher une ann\'ee et ainsi la mettre dans nos pr\'eferences.
         \begin{center}
             \includegraphics[scale=0.4]{img/Annee.png}
         \end{center}
@@ -211,11 +211,10 @@
         \end{center}
 
           \subsection{Remarques}
-          Comme vous pouvez le voir sur certaines images, certains bugs intervient comme par exemple l'heure de fin du cours. Nous tenons a pr\'eciser que ces bugs ont \'et\'e corrig\'es et fonctionnent d\'esormais parfaitement.
+          Comme vous pouvez le voir sur certaines images, certains bugs interviennent comme par exemple l'heure de fin du cours. Nous tenons a pr\'eciser que ces bugs ont \'et\'e corrig\'es et fonctionnent d\'esormais parfaitement.
 
     \section{Conclusion}
-        Ce projet nous a permit de comprendre comment fonctionne le développement d'une application
-        mobile et de s'habituer à des projets de petites envergures. Ce projet nous a aussi permit
-        de continuer notre maitrise de \textit{Git} ainsi que le management de projet.
-
+	La réalisation de cette application nous aura permis de nous familiariser avec les notions vues lors des différents cours théoriques ainsi que d'améliorer notre organisation en groupe dans le cadre d'un projet de développement. \\
+	
+	Nous avons atteint les objectifs que nous nous étions fixés en réalisant une application fonctionnelle et user-friendly reprenant l'ensemble des fonctionnalités auxquelles nous avions pensé lors de la première séance.
 \end{document}
